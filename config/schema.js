@@ -6,10 +6,10 @@ module.exports = function(db) {
   });
   db.model('Role', RoleSchema);
 
-  // var UserSchema = new Schema({
-  //   name: {type: String},
-  //   deviceId: {type: String, unique: true},
-  //   role: RoleSchema
-  // });
-  // db.model('User', UserSchema);
+  var UserSchema = new Schema({
+    name: {type: String},
+    deviceId: {type: String, unique: true},
+    role: {type: Schema.ObjectId, ref: 'role'}
+  });
+  db.model('User', UserSchema);
 }
