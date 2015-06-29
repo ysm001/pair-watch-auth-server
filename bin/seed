@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var seed = require('../config/seed.js')
+var db = require('../lib/db.js');
+
+db.insert = function(modelName, data) {
+  var model = db.model(modelName);
+
+  data.forEach(function(kv) {
+    var instance = new model();
+
+    for (var key in kv) {
+      var value = kv[key]
+      eval("instance." + key + "= value");
+    }
+
+    instance.save(function(err) {
+      if (err) console.log(err);
+      console.log(instance);
+    });
+  })
+}
+
+db.connection.on('open', function() {
+  db.connection.db.dropDatabase(function() {
+    seed(db);
+    console.log('Seed data is inserted. Please press Ctrl+C');
+  });
+});
