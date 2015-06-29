@@ -4,6 +4,21 @@ module.exports = (function() {
   }
 
   WatchAuth.prototype.distances = {};
+  WatchAuth.prototype.startConnection = function() {
+    this.io.on('connection', function(socket) {
+      this.onConnected(socket);
+      socket.on('disconnect', this.onDisconnected.bind(this));
+      socket.on('response-distance', this.onReceiveDistance.bind(this));
+    }.bind(this));
+  }
+
+  WatchAuth.prototype.auth = function(param, callback, timeout) {
+    this.requestDistance(function(distance) {
+      // stub
+      var result = {result: true, debug: distance};
+      callback(result);
+    }.bind(this), timeout);
+  }
 
   WatchAuth.prototype.onConnected = function(socket) {
     console.log("client connected!!");
@@ -25,14 +40,6 @@ module.exports = (function() {
     setTimeout(function() {
       callback(this.distances[token]);
     }.bind(this), timeout);
-  }
-
-  WatchAuth.prototype.startConnection = function() {
-    this.io.on('connection', function(socket) {
-      this.onConnected(socket);
-      socket.on('disconnect', this.onDisconnected.bind(this));
-      socket.on('response-distance', this.onReceiveDistance.bind(this));
-    }.bind(this));
   }
 
   return WatchAuth;

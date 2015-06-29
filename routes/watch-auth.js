@@ -7,9 +7,7 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.requestDistance(function(distance) {
-        res.send(distance);
-      }, 1000);
+      watchAuth.auth(null, function(result) {res.send(result)}, 1000);
     }
   };
 }
