@@ -1,52 +1,53 @@
 module.exports = (function() {
+  var _distances = {};
+  var _io = null;
+
   var WatchAuth = function(io) {
-    this._io = io;
+    _io = io;
   }
 
-  WatchAuth.prototype._distances = {};
-
   WatchAuth.prototype.startConnection = function() {
-    this._io.on('connection', function(socket) {
-      this._onConnected(socket);
-      socket.on('disconnect', this._onDisconnected.bind(this));
-      socket.on('response-distance', this._onReceiveDistance.bind(this));
+    _io.on('connection', function(socket) {
+      _onConnected(socket);
+      socket.on('disconnect', _onDisconnected.bind(this));
+      socket.on('response-distance', _onReceiveDistance.bind(this));
     }.bind(this));
   }
 
   WatchAuth.prototype.auth = function(params, callback, timeout) {
-    this._requestDistance(function(distance) {
-      callback(this._checkPermission(params, distance));
+    _requestDistance.call(this, function(distance) {
+      callback(_checkPermission(params, distance));
     }.bind(this), timeout);
   }
 
-  WatchAuth.prototype._checkPermission = function(params, distance) {
+  var _checkPermission = function(params, distance) {
     var result = {result: true, debug: distance};
     return result;
   }
 
-  WatchAuth.prototype._onConnected = function(socket) {
+  var _onConnected = function(socket) {
     console.log("client connected!!");
   }
 
-  WatchAuth.prototype._onDisconnected = function() {
+  var _onDisconnected = function() {
     console.log("client disconnected!!")
   }
 
-  WatchAuth.prototype._onReceiveDistance = function(data) {
-    this._distances[data['token']] = data['distance']
+  var _onReceiveDistance = function(data) {
+    _distances[data['token']] = data['distance']
     console.log(data);
   }
 
-  WatchAuth.prototype._generateToken = function() {
+  var _generateToken = function() {
     return '1234abc'
   }
 
-  WatchAuth.prototype._requestDistance = function(callback, timeout) {
-    var token = this._generateToken()
-    this._io.emit('request-distance', {token: token});
+  var _requestDistance = function(callback, timeout) {
+    var token = _generateToken()
+    _io.emit('request-distance', {token: token});
 
     setTimeout(function() {
-      callback(this._distances[token]);
+      callback(_distances[token]);
     }.bind(this), timeout);
   }
 
