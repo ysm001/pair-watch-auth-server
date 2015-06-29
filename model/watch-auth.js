@@ -4,6 +4,7 @@ module.exports = (function() {
   }
 
   WatchAuth.prototype.distances = {};
+
   WatchAuth.prototype.startConnection = function() {
     this.io.on('connection', function(socket) {
       this.onConnected(socket);
@@ -12,12 +13,15 @@ module.exports = (function() {
     }.bind(this));
   }
 
-  WatchAuth.prototype.auth = function(param, callback, timeout) {
+  WatchAuth.prototype.auth = function(params, callback, timeout) {
     this.requestDistance(function(distance) {
-      // stub
-      var result = {result: true, debug: distance};
-      callback(result);
+      callback(this.checkPermission(params, distance));
     }.bind(this), timeout);
+  }
+
+  WatchAuth.prototype.checkPermission = function(params, distance) {
+    var result = {result: true, debug: distance};
+    return result;
   }
 
   WatchAuth.prototype.onConnected = function(socket) {
