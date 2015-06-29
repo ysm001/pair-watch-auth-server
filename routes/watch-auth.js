@@ -6,7 +6,7 @@ module.exports = function(io) {
   watchAuth.startConnection();
 
   return {
-    check: function(req, res) {
+    auth: function(req, res) {
       watchAuth.requestDistance(function(distance) {
         res.send(distance);
       }, 1000);

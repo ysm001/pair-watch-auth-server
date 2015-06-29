@@ -1,6 +1,6 @@
 module.exports = function(app, io) {
-  var auth = require('./auth')(io);
-  app.get('/auth/check', auth.check);
+  var watchAuth = require('./watch-auth')(io);
+  app.get('/auth', watchAuth.auth);
 
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
