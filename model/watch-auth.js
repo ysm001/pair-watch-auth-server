@@ -1,24 +1,24 @@
 module.exports = (function() {
-  var Auth = function(io) {
+  var WatchAuth = function(io) {
     this.io = io;
   }
 
-  Auth.prototype.distances = {};
+  WatchAuth.prototype.distances = {};
 
-  Auth.prototype.onConnected = function(socket) {
+  WatchAuth.prototype.onConnected = function(socket) {
     console.log("client connected!!");
   }
 
-  Auth.prototype.onDisconnected = function() {
+  WatchAuth.prototype.onDisconnected = function() {
     console.log("client disconnected!!")
   }
 
-  Auth.prototype.onReceiveDistance = function(data) {
+  WatchAuth.prototype.onReceiveDistance = function(data) {
     this.distances[data['token']] = data['distance']
     console.log(data);
   }
 
-  Auth.prototype.requestDistance = function(callback, timeout) {
+  WatchAuth.prototype.requestDistance = function(callback, timeout) {
     var token = '1234abc'
     this.io.emit('request-distance', {token: token});
 
@@ -27,7 +27,7 @@ module.exports = (function() {
     }.bind(this), timeout);
   }
 
-  Auth.prototype.startConnection = function() {
+  WatchAuth.prototype.startConnection = function() {
     this.io.on('connection', function(socket) {
       this.onConnected(socket);
       socket.on('disconnect', this.onDisconnected.bind(this));
@@ -35,5 +35,5 @@ module.exports = (function() {
     }.bind(this));
   }
 
-  return Auth;
+  return WatchAuth;
 })();

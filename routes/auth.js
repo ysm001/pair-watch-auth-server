@@ -1,13 +1,13 @@
 var express = require('express');
-var Auth = require('../model/auth.js');
+var WatchAuth = require('../model/watch-auth.js');
 
 module.exports = function(io) {
-  var auth = new Auth(io);
-  auth.startConnection();
+  var watchAuth = new WatchAuth(io);
+  watchAuth.startConnection();
 
   return {
     check: function(req, res) {
-      auth.requestDistance(function(distance) {
+      watchAuth.requestDistance(function(distance) {
         res.send(distance);
       }, 1000);
     }
