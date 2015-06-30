@@ -27,7 +27,7 @@ module.exports = (function() {
   }
 
   var _onReceiveDistance = function(data) {
-    _distances[data['token']] = data['distance']
+    _distances[data.token] = data.distance
     console.log(data);
   }
 
@@ -37,6 +37,7 @@ module.exports = (function() {
 
     setTimeout(function() {
       callback(_distances[token]);
+      delete _distances[token]
     }.bind(this), timeout);
   }
 
