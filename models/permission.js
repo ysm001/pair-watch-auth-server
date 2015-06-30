@@ -3,6 +3,7 @@ module.exports = (function() {
 
   var PermissionSchema = new mongoose.Schema({
     name: {type: String, unique: true},
+    flag: {type: Number, unique: true}
   });
 
   return mongoose.model('Permission', PermissionSchema);
