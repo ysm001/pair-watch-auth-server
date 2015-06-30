@@ -10,20 +10,11 @@ module.exports = (function() {
     _socketIO = new SocketIO(io);
   }
 
-  WatchAuth.prototype.startConnection = function() {
-    _socketIO.startConnection();
-  }
-
   WatchAuth.prototype.auth = function(params, callback, timeout) {
     var sockets = _socketIO.sockets.toArray();
     RequestDispatcher.dispatch(sockets, 'distance', function(response) {
       callback(response);
     }, 1000);
-  }
-
-  var _checkPermission = function(params, distance) {
-    var result = {result: true, debug: distance};
-    return result;
   }
 
   return WatchAuth;
