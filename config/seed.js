@@ -1,14 +1,17 @@
-module.exports = function(db) {
-  db.insert('Role', [
-    {name: 'admin'},
-    {name: 'user'}
-  ]);
+db.dropDatabase();
 
-  var model = db.model('Role');
-  var adminRole = model.findOne({name: 'admin'});
-  var userRole = model.findOne({name: 'user'});
-  db.insert('User', [
-    {name: 'admin', deviceId: 'admin-device-id', role: adminRole._id},
-    {name: 'user', deviceId: 'user-device-id', role: userRole._id}
-  ]);
-}
+db.roles.insert([
+  {name: 'admin'}, 
+  {name: 'user'}
+]);
+
+db.users.insert([
+  {
+    name: 'admin',
+    role: db.roles.findOne({name: 'admin'})._id
+  },
+  {
+    name: 'user',
+    role: db.roles.findOne({name: 'user'})._id
+  }
+]);

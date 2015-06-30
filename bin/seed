@@ -1,29 +1,12 @@
 #!/usr/bin/env node
 
-var seed = require('../config/seed.js')
-var db = require('../lib/db.js');
+var config = require('../config/db.json')['development'];
+var db = config['host'] + '/' + config['database']
+var query = ['mongo', db, 'config/seed.js'].join(' '); 
 
-db.insert = function(modelName, data) {
-  var model = db.model(modelName);
+var exec = require('child_process').exec
 
-  data.forEach(function(kv) {
-    var instance = new model();
-
-    for (var key in kv) {
-      var value = kv[key]
-      eval("instance." + key + "= value");
-    }
-
-    instance.save(function(err) {
-      if (err) console.log(err);
-      console.log(instance);
-    });
-  })
-}
-
-db.connection.on('open', function() {
-  db.connection.db.dropDatabase(function() {
-    seed(db);
-    console.log('Seed data is inserted. Please press Ctrl+C');
-  });
+console.log(query);
+exec(query, function(err, stdout, stderr){
+  if (err) throw err;
 });
