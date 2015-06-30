@@ -1,5 +1,5 @@
 var express = require('express');
-var WatchAuth = require('../model/watch-auth.js');
+var WatchAuth = require('../models/watch-auth.js');
 
 module.exports = function(io) {
   var watchAuth = new WatchAuth(io);
