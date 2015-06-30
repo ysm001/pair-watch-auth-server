@@ -1,9 +1,9 @@
 db.dropDatabase();
 
 db.permissions.insert([
-  {name: 'ACCESS'}, 
-  {name: 'EXEC_COMMAND'},
-  {name: 'EXEC_ROOT_COMMAND'},
+  {name: 'ACCESS', flag: 1}, 
+  {name: 'EXEC_COMMAND', flag: 2},
+  {name: 'EXEC_ROOT_COMMAND', flag: 4},
 ]);
 
 var access = db.permissions.findOne({name: 'ACCESS'});

@@ -3,7 +3,6 @@ var WatchAuth = require('../models/watch-auth.js');
 
 module.exports = function(io) {
   var watchAuth = new WatchAuth(io);
-  watchAuth.startConnection();
 
   return {
     auth: function(req, res) {
