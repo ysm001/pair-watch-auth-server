@@ -1,0 +1,9 @@
+{
+  "development": {
+    "host": "localhost",
+    "port": "27017",
+    "database": "watch_auth_db"
+  },
+  "production": {},
+  "test": {}
+}
