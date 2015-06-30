@@ -1,4 +1,5 @@
 var SocketIO = require('../lib/socket-io.js');
+var Puid = require('puid');
 
 module.exports = (function() {
   var _distances = {};
@@ -30,12 +31,8 @@ module.exports = (function() {
     console.log(data);
   }
 
-  var _generateToken = function() {
-    return '1234abc'
-  }
-
   var _requestDistance = function(callback, timeout) {
-    var token = _generateToken()
+    var token = (new Puid()).generate();
     _socketIO.emit('request-distance', {token: token});
 
     setTimeout(function() {
