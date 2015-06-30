@@ -1,17 +1,17 @@
+var SocketIO = require('../lib/socket-io.js');
+
 module.exports = (function() {
   var _distances = {};
-  var _io = null;
+  var _socketIO = null;
 
   var WatchAuth = function(io) {
-    _io = io;
+    _socketIO = new SocketIO(io);
   }
 
   WatchAuth.prototype.startConnection = function() {
-    _io.on('connection', function(socket) {
-      _onConnected(socket);
-      socket.on('disconnect', _onDisconnected.bind(this));
+    _socketIO.startConnection(function(socket) {
       socket.on('response-distance', _onReceiveDistance.bind(this));
-    }.bind(this));
+    });
   }
 
   WatchAuth.prototype.auth = function(params, callback, timeout) {
@@ -25,14 +25,6 @@ module.exports = (function() {
     return result;
   }
 
-  var _onConnected = function(socket) {
-    console.log("client connected!!");
-  }
-
-  var _onDisconnected = function() {
-    console.log("client disconnected!!")
-  }
-
   var _onReceiveDistance = function(data) {
     _distances[data['token']] = data['distance']
     console.log(data);
@@ -44,7 +36,7 @@ module.exports = (function() {
 
   var _requestDistance = function(callback, timeout) {
     var token = _generateToken()
-    _io.emit('request-distance', {token: token});
+    _socketIO.emit('request-distance', {token: token});
 
     setTimeout(function() {
       callback(_distances[token]);
