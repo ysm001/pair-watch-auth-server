@@ -12,7 +12,7 @@ module.exports = (function() {
     .reduce(function(prev, cur) {return cur | prev}, 0);
   });
 
-  PermissionSchema.static('hasEnoughPermission', function(permissions, requiredPermissions) {
+  PermissionSchema.static('hasEnoughPermissions', function(permissions, requiredPermissions) {
     var flag = this.toBitFlag(permissions);
 
     return requiredPermissions.every(function(requiredPermission) {

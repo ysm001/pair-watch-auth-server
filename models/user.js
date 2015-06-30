@@ -8,11 +8,21 @@ module.exports = (function() {
     role: {type: mongoose.Schema.ObjectId, ref: 'Role'}
   });
   
-  UserSchema.static('findByPermission', function(permissions, callback) {
-    var User = this;
-    Role.findByPermission(permissions, function(err, roles) {
+  UserSchema.static('findByPermissions', function(permissions, callback) {
+    var self = this;
+
+    Role.findByPermissions(permissions, function(err, roles) {
       var roleIds = roles.map(function(role) {return role._id});
-      User.find({role: {$in: roleIds}}, callback);
+      self.find({role: {$in: roleIds}}, callback);
+    });
+  });
+
+  UserSchema.method('hasEnoughPermissions', function(permissions, callback) {
+    var self = this;
+
+    this.model('User').findByPermissions(permissions, function(err, users) {
+      var result = users.some(function(user) {return user._id.equals(self._id)});
+      callback(err, result, users);
     });
   });
 

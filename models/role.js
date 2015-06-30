@@ -7,10 +7,10 @@ module.exports = (function() {
     permissions: [{type: mongoose.Schema.ObjectId, ref: 'Permission'}]
   });
 
-  RoleSchema.static('findByPermission', function(permissions, callback) {
+  RoleSchema.static('findByPermissions', function(permissions, callback) {
     this.find({}).populate('permissions').exec(function(err, roles) {
       var results = roles.filter(function(role) {
-        return Permission.hasEnoughPermission(role.permissions, permissions);
+        return Permission.hasEnoughPermissions(role.permissions, permissions);
       });
 
       callback(err, results);
