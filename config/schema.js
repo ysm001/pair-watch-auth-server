@@ -1,8 +1,14 @@
 module.exports = function(db) {
   var Schema = db.Schema;
 
+  var Permission = new Schema(
+    name: {type: String, unique: true},
+  );
+  db.model('Permission', PermissionSchema);
+
   var RoleSchema = new Schema({
-    name: {type: String, unique: true}
+    name: {type: String, unique: true},
+    role: [{type: Schema.ObjectId, ref: 'permissions'}]
   });
   db.model('Role', RoleSchema);
 
