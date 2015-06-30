@@ -12,7 +12,8 @@ var execRootCommand = db.permissions.findOne({name: 'EXEC_ROOT_COMMAND'});
 
 db.roles.insert([
   {name: 'admin', permissions: [access._id, execCommand._id, execRootCommand._id]}, 
-  {name: 'user', permissions: [access._id, execCommand._id]}
+  {name: 'user', permissions: [access._id, execCommand._id]},
+  {name: 'readonly-user', permissions: [access._id]}
 ]);
 
 db.users.insert([
@@ -25,5 +26,10 @@ db.users.insert([
     name: 'user',
     deviceId: '1ABF357A-08C9-4D65-8EC5-18D2AB95E640',
     role: db.roles.findOne({name: 'user'})._id
+  },
+  {
+    name: 'readonly-user',
+    deviceId: 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBB',
+    role: db.roles.findOne({name: 'readonly-user'})._id
   }
 ]);
