@@ -28,26 +28,26 @@ module.exports = (function() {
         console.log(params.id + " has enough permission to access " + params.permission);
         _emitCheckPairingRequest(socket, function(response) {
           callback(null, response);
-        });
+        }, timeout);
       } else {
         console.log(params.id + " has not enough permission to access " + params.permission);
         _emitDistanceRequest(socket, function(response) {
-          callback(null, response);
-        });
+          callback(null, response, requiredUsers);
+        }, timeout);
       }
     });
   }
 
-  var _emitDistanceRequest = function(socket, callback) {
-    RequestDispatcher.dispatch(sockets, 'distance', function(response) {
+  var _emitDistanceRequest = function(socket, callback, timeout) {
+    RequestDispatcher.dispatch(socket, 'distance', function(response) {
       callback(response);
-    }, 1000);
+    }, timeout);
   }
 
-  var _emitCheckPairingRequest = function(socket, callback) {
+  var _emitCheckPairingRequest = function(socket, callback, timeout) {
     RequestDispatcher.dispatch(socket, 'check-pairing', function(response) {
       callback(response);
-    }, 1000);
+    }, timeout);
   }
 
   var _checkPermission = function(params, callback) {

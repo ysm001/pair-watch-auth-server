@@ -6,7 +6,13 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.auth(req.body, function(err, result) {res.send(result)}, 1000);
+      watchAuth.auth(req.body, function(err, result, requiredUsers) {
+        res.send({
+          result: result,
+          error: err,
+          'required-users': requiredUsers
+        })
+      }, 1000);
     }
   };
 }
