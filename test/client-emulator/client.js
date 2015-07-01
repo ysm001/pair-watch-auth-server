@@ -39,7 +39,7 @@ socket.on('request', function(data) {
   var response = null;
   switch (data.request) {
     case 'distance':
-      response = generateDistanceResponse(data.token, 'ADMIN-USER-A', 100);
+      response = generateDistanceResponse(data.token, 'UID-ADMIN-USER-A', 100);
       break;
     case 'check-pairing':
       response = generateResponse(data.token, {result: true});

@@ -5,6 +5,7 @@ var User = require('./user.js');
 var Permission = require('./permission.js');
 var async = require('async')
 var PairingChecker = require('../lib/pairing-checker.js')
+var DistanceChecker = require('../lib/distance-checker.js')
 
 module.exports = (function() {
   var _socketIO = null;
@@ -16,6 +17,7 @@ module.exports = (function() {
 
   WatchAuth.prototype.auth = function(params, callback, timeout) {
     var sockets = _socketIO.sockets();
+    var socket = _socketIO.socket(params.id);
     var tasks = [];
 
     tasks.push(function(next) {
@@ -23,11 +25,10 @@ module.exports = (function() {
     });
 
     tasks.push(function(result, requiredUsers, next) {
-      var socket = _socketIO.socket(params.id);
-      next(!socket ? params.id + " is not connected." : null, result, requiredUsers, socket);
+      next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
     });
 
-    tasks.push(function(result, requiredUsers, socket, next) {
+    tasks.push(function(result, requiredUsers,next) {
       _checkAccessibility(socket, result, requiredUsers, next, timeout);
     });
 
@@ -47,18 +48,12 @@ module.exports = (function() {
 
     tasks.push(function(result, next) {
       if (hasPermission) next(null, true);
-      else _emitDistanceRequest(socket, next, timeout);
+      else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
     });
 
     async.waterfall(tasks , function(err, result) {
       callback(err, result, requiredUsers);
     });
-  }
-
-  var _emitDistanceRequest = function(socket, callback, timeout) {
-    RequestDispatcher.dispatch(socket, 'distance', function(response) {
-      callback(null, response);
-    }, timeout);
   }
 
   var _checkPermission = function(params, callback) {
