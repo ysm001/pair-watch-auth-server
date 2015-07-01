@@ -4,6 +4,7 @@ var Puid = require('puid');
 var User = require('./user.js');
 var Permission = require('./permission.js');
 var async = require('async')
+var PairingChecker = require('../lib/pairing-checker.js')
 
 module.exports = (function() {
   var _socketIO = null;
@@ -37,7 +38,7 @@ module.exports = (function() {
     var tasks = [];
 
     tasks.push(function(next) {
-      _checkPairing(socket, next, timeout);
+      PairingChecker.check(socket, next, timeout);
     });
 
     tasks.push(function(result, next) {
@@ -54,38 +55,8 @@ module.exports = (function() {
     });
   }
 
-  var _checkPairing = function(socket, callback, timeout) {
-    var tasks = [];
-
-    tasks.push(function(next) {
-      _emitCheckPairingRequest(socket, next, timeout);
-    });
-
-    tasks.push(function(response, next) {
-      next(!response ? "invalid token" : null, response);
-    });
-
-    tasks.push(function(response, next) {
-      next(response.length == 0 ? "no response" : null, response);
-    });
-
-    tasks.push(function(response, next) {
-      next(response.length > 0 ? "too many response" : null, response);
-    });
-
-    async.waterfall(tasks, function(err, response) {
-      callback(null, response[0].result);
-    });
-  }
-
   var _emitDistanceRequest = function(socket, callback, timeout) {
     RequestDispatcher.dispatch(socket, 'distance', function(response) {
-      callback(null, response);
-    }, timeout);
-  }
-
-  var _emitCheckPairingRequest = function(socket, callback, timeout) {
-    RequestDispatcher.dispatch(socket, 'check-pairing', function(response) {
       callback(null, response);
     }, timeout);
   }
