@@ -14,6 +14,27 @@ socket.on('connect', function (data) {
   socket.emit("register-id", {"id": uid})
 });
 
-socket.on("disconnect", function() {
+socket.on('disconnect', function() {
   console.log("disconnected!");
+});
+
+var responseGenerator = function (token, target, distance) {
+  return {
+    token: token,
+    value: {
+      distance: {
+        id: uid,
+        'target-id': target,
+        value: distance
+      }
+    }
+  }
+}
+socket.on('request', function(data) {
+  console.log(data);
+
+  if (data.request == 'distance') {
+    var response = responseGenerator(data.token, 'ADMIN-USER-A', 100);
+    socket.emit('response', response);
+  }
 });
