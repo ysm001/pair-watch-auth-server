@@ -11,7 +11,8 @@ module.exports = (function() {
   }
 
   WatchAuth.prototype.auth = function(params, callback, timeout) {
-    var sockets = _socketIO.sockets.toArray();
+    var sockets = _socketIO.sockets();
+
     RequestDispatcher.dispatch(sockets, 'distance', function(response) {
       callback(response);
     }, 1000);
