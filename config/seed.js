@@ -18,18 +18,38 @@ db.roles.insert([
 
 db.users.insert([
   {
-    name: 'admin',
-    deviceId: 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAA',
+    name: 'admin-user-A',
+    deviceId: 'UID-ADMIN-USER-A',
     role: db.roles.findOne({name: 'admin'})._id
   },
   {
-    name: 'user',
-    deviceId: '1ABF357A-08C9-4D65-8EC5-18D2AB95E640',
+    name: 'admin-user-B',
+    deviceId: 'UID-ADMIN-USER-B',
+    role: db.roles.findOne({name: 'admin'})._id
+  },
+  {
+    name: 'user-A',
+    deviceId: 'UID-USER-A',
     role: db.roles.findOne({name: 'user'})._id
   },
   {
-    name: 'readonly-user',
-    deviceId: 'BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBB',
+    name: 'user-B',
+    deviceId: 'UID-USER-B',
+    role: db.roles.findOne({name: 'user'})._id
+  },
+  {
+    name: 'readonly-user-A',
+    deviceId: 'UID-READONLY-USER-A',
     role: db.roles.findOne({name: 'readonly-user'})._id
+  },
+  {
+    name: 'readonly-user-B',
+    deviceId: 'UID-READONLY-USER-B',
+    role: db.roles.findOne({name: 'readonly-user'})._id
+  },
+  {
+    name: 'iphone',
+    deviceId: '1ABF357A-08C9-4D65-8EC5-18D2AB95E640',
+    role: db.roles.findOne({name: 'user'})._id
   }
 ]);
