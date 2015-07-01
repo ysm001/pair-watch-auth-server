@@ -6,7 +6,7 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.auth(null, function(result) {res.send(result)}, 1000);
+      watchAuth.auth(req.body, function(result) {res.send(result)}, 1000);
     }
   };
 }
