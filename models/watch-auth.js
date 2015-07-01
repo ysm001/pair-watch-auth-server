@@ -16,11 +16,36 @@ module.exports = (function() {
     var sockets = _socketIO.sockets();
 
     _checkPermission.call(this, params, function(err, result, requiredUsers) {
-      console.log(result);
-      console.log(requiredUsers);
-    });
+      var socket = _socketIO.socket(params.id);
 
+      if (!socket) {
+        console.log(params.id + "is not connected.");
+        callback(null, {});
+        return;
+      }
+
+      if (result) {
+        console.log(params.id + " has enough permission to access " + params.permission);
+        _emitCheckPairingRequest(socket, function(response) {
+          callback(null, response);
+        });
+      } else {
+        console.log(params.id + " has not enough permission to access " + params.permission);
+        _emitDistanceRequest(socket, function(response) {
+          callback(null, response);
+        });
+      }
+    });
+  }
+
+  var _emitDistanceRequest = function(socket, callback) {
     RequestDispatcher.dispatch(sockets, 'distance', function(response) {
+      callback(response);
+    }, 1000);
+  }
+
+  var _emitCheckPairingRequest = function(socket, callback) {
+    RequestDispatcher.dispatch(socket, 'check-pairing', function(response) {
       callback(response);
     }, 1000);
   }
