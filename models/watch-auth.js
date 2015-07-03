@@ -18,38 +18,35 @@ module.exports = (function() {
   WatchAuth.prototype.auth = function(params, callback, timeout) {
     var sockets = _socketIO.sockets();
     var socket = _socketIO.socket(params.id);
-    var tasks = [];
 
-    tasks.push(function(next) {
-      _checkPermission.call(this, params, next, timeout);
-    });
-
-    tasks.push(function(result, requiredUsers, next) {
-      next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
-    });
-
-    tasks.push(function(result, requiredUsers,next) {
-      _checkAccessibility(socket, result, requiredUsers, next, timeout);
-    });
+    var tasks = [
+      function(next) {
+        _checkPermission.call(this, params, next, timeout);
+      },
+      function(result, requiredUsers, next) {
+        next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
+      },
+      function(result, requiredUsers,next) {
+        _checkAccessibility(socket, result, requiredUsers, next, timeout);
+      }
+    ];
 
     async.waterfall(tasks, callback);
   }
 
   var _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
-    var tasks = [];
-
-    tasks.push(function(next) {
-      PairingChecker.check(socket, next, timeout);
-    });
-
-    tasks.push(function(result, next) {
-      next(!result ? "pairing check is failed" : null, result);
-    });
-
-    tasks.push(function(result, next) {
-      if (hasPermission) next(null, true);
-      else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
-    });
+    var tasks = [
+      function(next) {
+        PairingChecker.check(socket, next, timeout);
+      },
+      function(result, next) {
+        next(!result ? "pairing check is failed" : null, result);
+      },
+      function(result, next) {
+        if (hasPermission) next(null, true);
+        else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
+      }
+    ];
 
     async.waterfall(tasks , function(err, result) {
       callback(err, result, requiredUsers);
