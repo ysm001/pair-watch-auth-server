@@ -2,12 +2,26 @@ module.exports = (function() {
   var mongoose = require('mongoose');
   var Role = require('./role.js');
 
+  /**
+   * User Model
+   *
+   * @class UserSchema
+   * @constructor
+   */
   var UserSchema = new mongoose.Schema({
     name: {type: String},
     deviceId: {type: String, unique: true},
     role: {type: mongoose.Schema.ObjectId, ref: 'Role'}
   });
   
+
+  /**
+   * 指定したpermissionを満たす権限を持つUserを検索するメソッド
+   *
+   * @method findByPermissions
+   * @param {[Permission]} permissions permissionの配列
+   * @param {Function} callback callback
+   */
   UserSchema.static('findByPermissions', function(permissions, callback) {
     var self = this;
 
@@ -17,6 +31,13 @@ module.exports = (function() {
     });
   });
 
+  /**
+   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
+   *
+   * @method hasEnoughPermissions
+   * @param {[Permission]} permissions permissionの配列
+   * @param {Function} callback callback
+   */
   UserSchema.method('hasEnoughPermissions', function(permissions, callback) {
     var self = this;
 
@@ -26,6 +47,13 @@ module.exports = (function() {
     });
   });
 
+  /**
+   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)
+   *
+   * @method hasEnoughPermission
+   * @param {Permission} permissions permission
+   * @param {Function} callback callback
+   */
   UserSchema.method('hasEnoughPermission', function(permission, callback) {
     this.hasEnoughPermissions([permission], callback);
   });

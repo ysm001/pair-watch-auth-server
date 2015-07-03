@@ -1,0 +1,608 @@
+{
+    "project": {},
+    "files": {
+        "lib/distance-checker.js": {
+            "name": "lib/distance-checker.js",
+            "modules": {},
+            "classes": {
+                "DistanceChecker": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/pairing-checker.js": {
+            "name": "lib/pairing-checker.js",
+            "modules": {},
+            "classes": {
+                "PairingChecker": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/request-dispatcher.js": {
+            "name": "lib/request-dispatcher.js",
+            "modules": {},
+            "classes": {
+                "RequestDispatcher": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/socket-io.js": {
+            "name": "lib/socket-io.js",
+            "modules": {},
+            "classes": {
+                "SocketIO": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "models/permission.js": {
+            "name": "models/permission.js",
+            "modules": {},
+            "classes": {
+                "PermissionSchema": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "models/role.js": {
+            "name": "models/role.js",
+            "modules": {},
+            "classes": {
+                "RoleSchema": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "models/user.js": {
+            "name": "models/user.js",
+            "modules": {},
+            "classes": {
+                "UserSchema": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "DistanceChecker": {
+            "name": "DistanceChecker",
+            "shortname": "DistanceChecker",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/distance-checker.js",
+            "line": 6,
+            "description": "iOSアプリ間の距離を扱うクラス\n\n(サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)",
+            "is_constructor": 1
+        },
+        "PairingChecker": {
+            "name": "PairingChecker",
+            "shortname": "PairingChecker",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/pairing-checker.js",
+            "line": 5,
+            "description": "ペアリングの状態を確認するクラス\n\n(サーバ側からはペアリングの状態確認リクエストを送るだけで、実際にペアリングの状態を確認するのはiOSアプリ側)",
+            "is_constructor": 1
+        },
+        "RequestDispatcher": {
+            "name": "RequestDispatcher",
+            "shortname": "RequestDispatcher",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/request-dispatcher.js",
+            "line": 6,
+            "description": "Clientへのリクエスト送信を行うクラス",
+            "is_constructor": 1
+        },
+        "SocketIO": {
+            "name": "SocketIO",
+            "shortname": "SocketIO",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/socket-io.js",
+            "line": 4,
+            "description": "socket.ioの簡易wrapperクラス",
+            "is_constructor": 1
+        },
+        "PermissionSchema": {
+            "name": "PermissionSchema",
+            "shortname": "PermissionSchema",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "models/permission.js",
+            "line": 4,
+            "description": "Permission Model",
+            "is_constructor": 1
+        },
+        "RoleSchema": {
+            "name": "RoleSchema",
+            "shortname": "RoleSchema",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "models/role.js",
+            "line": 5,
+            "description": "Role Model",
+            "is_constructor": 1
+        },
+        "UserSchema": {
+            "name": "UserSchema",
+            "shortname": "UserSchema",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "models/user.js",
+            "line": 5,
+            "description": "User Model",
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "lib/distance-checker.js",
+            "line": 16,
+            "description": "指定した権限を持つユーザが近くにいるかを確認するメソッド",
+            "itemtype": "method",
+            "name": "checkPermissionHoldersAreNear",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "確認先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "permissionHolders",
+                    "description": "権限を持つユーザ",
+                    "type": "[User]"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "DistanceChecker"
+        },
+        {
+            "file": "lib/distance-checker.js",
+            "line": 32,
+            "description": "近くにいる権限を持つユーザを探すメソッド",
+            "itemtype": "method",
+            "name": "_findNearPermissionHolders",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "確認先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "permissionHolders",
+                    "description": "権限を持つユーザ",
+                    "type": "[User]"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "DistanceChecker"
+        },
+        {
+            "file": "lib/distance-checker.js",
+            "line": 64,
+            "description": "距離計測のリクエストを送るメソッド",
+            "itemtype": "method",
+            "name": "_emitDistanceRequest",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "DistanceChecker"
+        },
+        {
+            "file": "lib/pairing-checker.js",
+            "line": 15,
+            "description": "ペアリングの状態を確認するメソッド",
+            "itemtype": "method",
+            "name": "check",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "確認先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "PairingChecker"
+        },
+        {
+            "file": "lib/pairing-checker.js",
+            "line": 45,
+            "description": "ペアリングの状態を確認するリクエストを送るメソッド",
+            "itemtype": "method",
+            "name": "_emit",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "PairingChecker"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 14,
+            "description": "クライアントへのリクエスト送信を行い、結果を受け取るメソッド\n\n一定時間以内に返答された結果全てを配列としてcallbackに渡す",
+            "itemtype": "method",
+            "name": "dispatch",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "request",
+                    "description": "リクエスト内容",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "結果を受け取るcallback",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 40,
+            "description": "レスポンスを受け取った際に呼ばれるcallback",
+            "itemtype": "method",
+            "name": "_onReceiveResponse",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "res",
+                    "description": "レスポンス",
+                    "type": "Object"
+                }
+            ],
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 15,
+            "description": "接続の受け入れを開始するメソッド",
+            "itemtype": "method",
+            "name": "startConnection",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "接続受け入れ開始後に呼ばれるcallback",
+                    "type": "Function"
+                }
+            ],
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 30,
+            "description": "クライアントにデータを送信するメソッド",
+            "itemtype": "method",
+            "name": "emit",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "イベント名",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "送信するデータ",
+                    "type": "String"
+                }
+            ],
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 41,
+            "description": "接続済socketの配列を返すメソッド",
+            "itemtype": "method",
+            "name": "sockets",
+            "return": {
+                "description": "sockets 接続済socketの配列",
+                "type": "[Socket]"
+            },
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 51,
+            "description": "指定したUser IDと紐付けられたsocketを返すメソッド",
+            "itemtype": "method",
+            "name": "socket",
+            "params": [
+                {
+                    "name": "uid",
+                    "description": "User ID",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "socket 指定したUser IDと紐付けられたsocket",
+                "type": "Socket"
+            },
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 67,
+            "description": "client接続時に呼ばれるcallback",
+            "itemtype": "method",
+            "name": "_onConnected",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "新たに接続したsocket",
+                    "type": "Socket"
+                }
+            ],
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 79,
+            "description": "client切断時に呼ばれるcallback",
+            "itemtype": "method",
+            "name": "_onDisconnected",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "切断されたsocket",
+                    "type": "Socket"
+                }
+            ],
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/socket-io.js",
+            "line": 90,
+            "description": "User IDとsocketの紐付けが行われた時に呼ばれるcallback",
+            "itemtype": "method",
+            "name": "_onRegisterId",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "紐付けを行うsocket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "data",
+                    "description": "User IDを含むObject",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "id",
+                            "description": "User ID",
+                            "type": "String"
+                        }
+                    ]
+                }
+            ],
+            "class": "SocketIO"
+        },
+        {
+            "file": "models/permission.js",
+            "line": 15,
+            "description": "指定した複数のpermissionをbit flagに変換するメソッド",
+            "itemtype": "method",
+            "name": "toBitFlags",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permissionの配列",
+                    "type": "[Permission]"
+                }
+            ],
+            "return": {
+                "description": "bit flag",
+                "type": "Integer"
+            },
+            "class": "PermissionSchema"
+        },
+        {
+            "file": "models/permission.js",
+            "line": 28,
+            "description": "指定したpermissionが、要求されるpermissionを満たすかを検査するメソッド",
+            "itemtype": "method",
+            "name": "hasEnoughPermissions",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permissionの配列",
+                    "type": "[Permission]"
+                },
+                {
+                    "name": "requiredPermissions",
+                    "description": "要求されるpermissionの配列",
+                    "type": "[Permission]"
+                }
+            ],
+            "return": {
+                "description": "permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse",
+                "type": "[Boolean]"
+            },
+            "class": "PermissionSchema"
+        },
+        {
+            "file": "models/role.js",
+            "line": 16,
+            "description": "指定したpermissionを満たす権限を持つRoleを検索するメソッド",
+            "itemtype": "method",
+            "name": "findByPermissions",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permissionの配列",
+                    "type": "[Permission]"
+                },
+                {
+                    "name": "callback",
+                    "description": "callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "RoleSchema"
+        },
+        {
+            "file": "models/user.js",
+            "line": 18,
+            "description": "指定したpermissionを満たす権限を持つUserを検索するメソッド",
+            "itemtype": "method",
+            "name": "findByPermissions",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permissionの配列",
+                    "type": "[Permission]"
+                },
+                {
+                    "name": "callback",
+                    "description": "callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "UserSchema"
+        },
+        {
+            "file": "models/user.js",
+            "line": 34,
+            "description": "Userが、指定したpermissionを満たす権限を持つかを検査するメソッド",
+            "itemtype": "method",
+            "name": "hasEnoughPermissions",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permissionの配列",
+                    "type": "[Permission]"
+                },
+                {
+                    "name": "callback",
+                    "description": "callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "UserSchema"
+        },
+        {
+            "file": "models/user.js",
+            "line": 50,
+            "description": "Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)",
+            "itemtype": "method",
+            "name": "hasEnoughPermission",
+            "params": [
+                {
+                    "name": "permissions",
+                    "description": "permission",
+                    "type": "Permission"
+                },
+                {
+                    "name": "callback",
+                    "description": "callback",
+                    "type": "Function"
+                }
+            ],
+            "class": "UserSchema"
+        }
+    ],
+    "warnings": []
+}
