@@ -11,10 +11,24 @@ module.exports = (function() {
   var _socketIO = null;
   var _requestDispatcher = null;
 
+  /**
+   * Apple Watchを使った認証を扱うクラス
+   *
+   * @class WatchAuth
+   * @constructor
+   */
   var WatchAuth = function(io) {
     _socketIO = new SocketIO(io);
   }
 
+  /**
+   * 認証を行うメソッド
+   *
+   * @method auth
+   * @param {[Object]} params 認証用パラメータ
+   * @param {String} params.id ユーザID
+   * @param {Integer} timeout レスポンス待機時間
+   */
   WatchAuth.prototype.auth = function(params, callback, timeout) {
     var sockets = _socketIO.sockets();
     var socket = _socketIO.socket(params.id);
