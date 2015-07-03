@@ -18,23 +18,33 @@ socket.on('disconnect', function() {
   console.log("disconnected!");
 });
 
-var responseGenerator = function (token, target, distance) {
+var generateResponse = function(token, value) {
   return {
     token: token,
-    value: {
-      distance: {
-        id: uid,
-        'target-id': target,
-        value: distance
-      }
-    }
+    value: value
   }
 }
+
+var generateDistanceResponse = function(token, target, distance) {
+  return generateResponse(token, {
+    id: uid,
+    'target-id': target,
+    value: distance
+  });
+}
+
 socket.on('request', function(data) {
   console.log(data);
 
-  if (data.request == 'distance') {
-    var response = responseGenerator(data.token, 'ADMIN-USER-A', 100);
-    socket.emit('response', response);
+  var response = null;
+  switch (data.request) {
+    case 'distance':
+      response = generateDistanceResponse(data.token, 'UID-ADMIN-USER-A', 100);
+      break;
+    case 'check-pairing':
+      response = generateResponse(data.token, {result: true});
+      break;
   }
+
+  socket.emit('response', response);
 });

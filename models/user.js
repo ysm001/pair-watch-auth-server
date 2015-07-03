@@ -26,5 +26,9 @@ module.exports = (function() {
     });
   });
 
+  UserSchema.method('hasEnoughPermission', function(permission, callback) {
+    this.hasEnoughPermissions([permission], callback);
+  });
+
   return mongoose.model('User', UserSchema);
 }) ();
