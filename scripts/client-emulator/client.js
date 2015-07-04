@@ -87,7 +87,7 @@ Bleacon.on('discover', function(bleacon) {
   ].join('-').toUpperCase();
 
   var token = bleacon.major
-  var distance = bleacon.rssi
+  var distance = -bleacon.rssi
 
   var response = generateDistanceResponse(token, uuid, distance);
   console.dir(response);
