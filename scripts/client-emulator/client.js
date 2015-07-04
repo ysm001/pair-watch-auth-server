@@ -36,7 +36,7 @@ var generateDistanceResponse = function(token, target, distance) {
 
 var distanceRequestId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
 var advertisingTime = 300;
-var startAdvertising(uuid, major, minor, measuredPower) {
+var startAdvertising = function(uuid, major, minor, measuredPower) {
   var uuid = uid
   var major = token;
   var minor = 1;
@@ -49,12 +49,12 @@ var startAdvertising(uuid, major, minor, measuredPower) {
 // TODO: advertising中に呼ばれた時の対策
 var sendRequestDistanceBeacon = function(token) {
   var uuid = distanceRequestId
-  startAdvertising(uuid, major, token, measuredPower);
+  startAdvertising(uuid, major);
 }
 
 var sendResponseDistanceBeacon = function(token) {
   var uuid = uid
-  Bleacon.startAdvertising(uuid, token, minor, measuredPower);
+  startAdvertising(uuid, token);
 }
 
 socket.on('request', function(data) {
