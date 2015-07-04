@@ -2,6 +2,7 @@ var io = require('socket.io-client');
 var config = require('../../config/server.json').development;
 var url = "http://localhost:" + config.port;
 var uid = process.argv[2];
+var Bleacon = require('bleacon');
 
 var options = {
   'force new connection':true,
@@ -36,15 +37,34 @@ var generateDistanceResponse = function(token, target, distance) {
 socket.on('request', function(data) {
   console.log(data);
 
-  var response = null;
   switch (data.request) {
     case 'distance':
-      response = generateDistanceResponse(data.token, 'UID-ADMIN-USER-A', 100);
+      // TODO: send distance request
       break;
     case 'check-pairing':
-      response = generateResponse(data.token, {result: true});
+      var response = generateResponse(data.token, {result: true});
+      socket.emit('response', response);
       break;
   }
 
+});
+
+Bleacon.startScanning();
+Bleacon.on('discover', function(bleacon) {
+  var uuid = [
+    bleacon.uuid.substring(0, 8), 
+    bleacon.uuid.substring(8, 12), 
+    bleacon.uuid.substring(12, 16), 
+    bleacon.uuid.substring(16, 32)
+  ].join('-').toUpperCase();
+
+  var token = bleacon.major
+  var distance = bleacon.rssi
+
+  var response = generateDistanceResponse(token, uuid, distance);
+  console.dir(response);
+
   socket.emit('response', response);
 });
+
+
