@@ -38,7 +38,8 @@ module.exports = (function() {
         _checkPermission.call(this, params, next, timeout);
       },
       function(result, requiredUsers, next) {
-        next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
+        var result = !!socket
+        next(!result ? params.id + " is not connected." : null, result, requiredUsers);
       },
       function(result, requiredUsers,next) {
         _checkAccessibility(socket, result, requiredUsers, next, timeout);
