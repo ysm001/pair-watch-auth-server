@@ -5,10 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var db = require('./lib/db.js');
-
+var corser = require("corser");
 var routes = require('./routes/index');
 
 var app = express();
+
+// デバッグ用にCORSを許可 (本番環境では必ず外すこと)
+app.use(corser.create());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
