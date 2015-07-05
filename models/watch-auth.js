@@ -38,15 +38,16 @@ module.exports = (function() {
         _checkPermission.call(this, params, next, timeout);
       },
       function(result, requiredUsers, next) {
-        var result = !!socket
-        next(!result ? params.id + " is not connected." : null, result, requiredUsers);
+        next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
       },
       function(result, requiredUsers,next) {
         _checkAccessibility(socket, result, requiredUsers, next, timeout);
       }
     ];
 
-    async.waterfall(tasks, callback);
+    async.waterfall(tasks, function(err, result, requiredUsers) {
+      callback(err, result && !err, requiredUsers);
+    });
   }
 
   var _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
