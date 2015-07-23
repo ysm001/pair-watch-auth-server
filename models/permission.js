@@ -26,7 +26,7 @@ module.exports = (function() {
   });
 
   /**
-   * 指定したpermissionが、要求されるpermissionを満たすかを検査するメソッド
+   * 指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド
    *
    * @method hasEnoughPermissions
    * @param {[Permission]} permissions permissionの配列
