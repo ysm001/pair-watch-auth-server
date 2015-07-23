@@ -1,6 +1,5 @@
 var db = require('../../lib/db.js');
 var assert = require('assert');
-var async = require('async')
 var Permission = require('../../models/permission.js');
 
 var permissions = {};
