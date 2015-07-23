@@ -41,5 +41,22 @@ module.exports = (function() {
     })
   })
 
+  /**
+   * DB内の全てのPermissionを読み込むメソッド (デバッグ用)
+   *
+   * @method findAll
+   * @param {[Function]} callback 返ってきたPermissionを受け取るコールバック
+   */
+  PermissionSchema.static('findAll', function(callback) {
+    this.find({}, function(err, permissions) {
+      var results = {};
+      permissions.forEach(function(permission) {
+        results[permission.name] = permission
+      });
+
+      callback(results);
+    });
+  });
+
   return mongoose.model('Permission', PermissionSchema);
 }) ();

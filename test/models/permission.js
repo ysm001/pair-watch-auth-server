@@ -5,18 +5,10 @@ var Permission = require('../../models/permission.js');
 
 var permissions = {};
 before(function (done) {
-  var permissionNames = ['ACCESS', 'EXEC_COMMAND', 'EXEC_ROOT_COMMAND'];
-
-  var tasks = permissionNames.map(function(name) {
-    return (function(next) {
-      Permission.findOne({name: name}, function(err, permission) {
-        permissions[name] = permission;
-        next();
-      });
-    });
+  Permission.findAll(function(results) {
+    permissions = results;
+    done();
   });
-
-  async.waterfall(tasks, done);
 });
 
 var getPermissions = function(names) {
