@@ -1,19 +1,12 @@
 var assert = require('assert');
-var app = require('../../app');
-var config = require('../../config/server.json').development;
-var http = require('http');
-var port = config.port;
+var ServerHelper = require('../support/server-helper.js');
 var SocketIO = require('../../lib/socket-io.js');
 var ClientHelper = require('../support/client-helper.js');
-app.set('port', port);
-
-var server = http.createServer(app);
-var io = require('socket.io')(server)
 
 var socketIO;
 before(function() {
-  server.listen(port);
-  socketIO = new SocketIO(io);
+  ServerHelper.init();
+  socketIO = new SocketIO(ServerHelper.io);
 });
 
 var spawnClients = function(users) {
