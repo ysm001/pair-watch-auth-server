@@ -9,18 +9,6 @@ before(function() {
   socketIO = new SocketIO(ServerHelper.io);
 });
 
-var spawnClients = function(users) {
-  return users.map(function(user) {ClientHelper.spawn(user)});
-};
-
-var doTestWithUser = function(users, testFunction) {
-  var clients = spawnClients(users);
-
-  setTimeout(function() {
-    testFunction(clients);
-  }, 1000);
-};
-
 describe('SocketIO', function () {
   describe('sockets', function () {
     it('クライアント未接続時のsocketsのサイズは0', function () {
@@ -30,7 +18,7 @@ describe('SocketIO', function () {
     it('2クライアント接続時のsocketsのサイズは2', function (done) {
       var users = ['READONLY-USER-A', 'READONLY-USER-B'];
 
-      doTestWithUser(users, function(clients) {
+      ClientHelper.doTestWithUsers(users, function(clients) {
         assert.equal(socketIO.sockets().length, 2);
         done();
       });
@@ -43,7 +31,7 @@ describe('SocketIO', function () {
         ['READONLY-USER-A', 'READONLY-USER-B',
           'USER-A', 'USER-B', 'ADMIN-USER-A'];
 
-      doTestWithUser(users, function(clients) {
+      ClientHelper.doTestWithUsers(users, function(clients) {
         users.forEach(function(user) {
           assert.notEqual(socketIO.socket(user), null);
         });
@@ -56,7 +44,7 @@ describe('SocketIO', function () {
     it('接続済クライアントのsocketにはIDが紐付けられている', function (done) {
       var users = ['READONLY-USER-A', 'READONLY-USER-B'];
 
-      doTestWithUser(users, function(clients) {
+      ClientHelper.doTestWithUsers(users, function(clients) {
         users.forEach(function(user) {
           assert.equal(socketIO.socket(user).handshake.user.id, user);
         });

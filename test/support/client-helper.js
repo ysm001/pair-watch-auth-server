@@ -18,5 +18,13 @@ module.exports = (function() {
     return client;
   };
 
+  ClientHelper.doTestWithUsers = function(users, testFunction) {
+    var clients = users.map(function(user) {ClientHelper.spawn(user)});
+
+    setTimeout(function() {
+      testFunction(clients);
+    }, 1000);
+  };
+
   return ClientHelper;
 })();
