@@ -15,5 +15,13 @@ module.exports = (function() {
     ServerHelper.server.listen(port);
   }
 
+  ServerHelper.waitForDisconnect = function(socketIO, done) {
+    if (socketIO.sockets().length != 0) {
+      setTimeout(ServerHelper.waitForDisconnect.bind(this, socketIO, done), 100);
+    } else {
+      done();
+    }
+  }
+
   return ServerHelper;
 })();
