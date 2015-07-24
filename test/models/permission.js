@@ -14,19 +14,19 @@ var getPermissions = function(names) {
   return names.map(function(name) {return permissions[name]});
 }
 
-describe('Permission', function () {
-  describe('toBitFlag', function () {
-    it('[ACCESS, EXEC_COMMAND, EXEC_ROOT_COMMAND]は7(00000111)になる', function () {
-      var perms = getPermissions(['ACCESS', 'EXEC_COMMAND', 'EXEC_ROOT_COMMAND']);
-      assert.equal(Permission.toBitFlag(perms), 7);
-    });
-
-    it('[ACCESS, EXEC_ROOT_COMMAND]は5(00000101)になる', function () {
-      var perms = getPermissions(['ACCESS', 'EXEC_ROOT_COMMAND']);
-      assert.equal(Permission.toBitFlag(perms), 5);
-    });
-  });
-});
+// describe('Permission', function () {
+//   describe('toBitFlag', function () {
+//     it('[ACCESS, EXEC_COMMAND, EXEC_ROOT_COMMAND]は7(00000111)になる', function () {
+//       var perms = getPermissions(['ACCESS', 'EXEC_COMMAND', 'EXEC_ROOT_COMMAND']);
+//       assert.equal(Permission.toBitFlag(perms), 7);
+//     });
+// 
+//     it('[ACCESS, EXEC_ROOT_COMMAND]は5(00000101)になる', function () {
+//       var perms = getPermissions(['ACCESS', 'EXEC_ROOT_COMMAND']);
+//       assert.equal(Permission.toBitFlag(perms), 5);
+//     });
+//   });
+// });
 
 describe('Permission', function () {
   describe('hasEnoughPermissions', function () {
