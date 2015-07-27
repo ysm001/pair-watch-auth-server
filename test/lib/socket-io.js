@@ -32,8 +32,8 @@ describe('SocketIO', function () {
   describe('socket', function () {
     it('接続済のsocketが全て取得可能かつ接続していないsocketの情報は取得不可能', function (done) {
       var users = 
-        ['READONLY-USER-A', 'READONLY-USER-B',
-          'USER-A', 'USER-B', 'ADMIN-USER-A'];
+        ['UID-READONLY-USER-A', 'UID-READONLY-USER-B',
+          'UID-USER-A', 'UID-USER-B', 'UID-ADMIN-USER-A'];
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
         users.forEach(function(user) {
@@ -46,7 +46,7 @@ describe('SocketIO', function () {
     });
 
     it('接続済クライアントのsocketにはIDが紐付けられている', function (done) {
-      var users = ['READONLY-USER-A', 'READONLY-USER-B'];
+      var users = ['UID-READONLY-USER-A', 'UID-READONLY-USER-B'];
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
         users.forEach(function(user) {
