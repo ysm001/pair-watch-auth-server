@@ -2,6 +2,7 @@ var io = require('socket.io-client');
 var config = require('../../config/server.json').development;
 var url = "http://localhost:" + config.port;
 var uid = process.argv[2];
+var disableBeacon = !!process.argv[3];
 var Bleacon = require('bleacon');
 
 var options = {
@@ -79,27 +80,29 @@ socket.on('request', function(data) {
 
 });
 
-Bleacon.startScanning();
-Bleacon.on('discover', function(bleacon) {
-  // if (bleacon.uuid == distanceRequestId) {
-  // sendResponseDistanceBeacon()
-  // }
+if (!disableBeacon) {
+  Bleacon.startScanning();
+  Bleacon.on('discover', function(bleacon) {
+    // if (bleacon.uuid == distanceRequestId) {
+    // sendResponseDistanceBeacon()
+    // }
 
-  var uuid = [
-    bleacon.uuid.substring(0, 8), 
-    bleacon.uuid.substring(8, 12), 
-    bleacon.uuid.substring(12, 16), 
-    bleacon.uuid.substring(16, 20), 
-    bleacon.uuid.substring(20, 32)
-  ].join('-').toUpperCase();
+    var uuid = [
+      bleacon.uuid.substring(0, 8), 
+      bleacon.uuid.substring(8, 12), 
+      bleacon.uuid.substring(12, 16), 
+      bleacon.uuid.substring(16, 20), 
+      bleacon.uuid.substring(20, 32)
+    ].join('-').toUpperCase();
 
-  var token = bleacon.major
-  var distance = bleacon.proximity
+    var token = bleacon.major
+    var distance = bleacon.proximity
 
-  var response = generateDistanceResponse(token, uuid, distance);
-  console.dir(response);
+    var response = generateDistanceResponse(token, uuid, distance);
+    console.dir(response);
 
-  socket.emit('response', response);
-});
-
-
+    socket.emit('response', response);
+  });
+} else {
+  console.log("beacon is disabled");
+}
