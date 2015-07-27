@@ -3,10 +3,12 @@ var ServerHelper = require('../support/server-helper.js');
 var SocketIO = require('../../lib/socket-io.js');
 var WatchAuth = require('../../models/watch-auth.js');
 var ClientHelper = require('../support/client-helper.js');
+var LoggerHelper = require('../support/logger-helper.js');
 
 var socketIO;
 var watchAuth;
 before(function() {
+  LoggerHelper.setLevel('info');
   ServerHelper.init();
   watchAuth = new WatchAuth(ServerHelper.io);
   socketIO = watchAuth.socketIO();
