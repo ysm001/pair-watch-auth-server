@@ -27,6 +27,7 @@ module.exports = (function() {
    * @method auth
    * @param {[Object]} params 認証用パラメータ
    * @param {String} params.id ユーザID
+   * @param {String} params.permission 要求している権限
    * @param {Integer} timeout レスポンス待機時間
    */
   WatchAuth.prototype.auth = function(params, callback, timeout) {
@@ -56,7 +57,7 @@ module.exports = (function() {
         PairingChecker.check(socket, next, timeout);
       },
       function(result, next) {
-        next(!result ? "pairing check is failed" : null, result);
+        next(!result ? "pairing check is failed." : null, result);
       },
       function(result, next) {
         if (hasPermission) next(null, true);
@@ -72,9 +73,19 @@ module.exports = (function() {
   var _checkPermission = function(params, callback) {
     Permission.findOne({name: params.permission}, function(err, permission) {
       User.findOne({deviceId: params.id}, function(err, user) {
-        user.hasEnoughPermission(permission, callback);
+        if (err || !user) callback(err || params.id + ' is not valid user.', false);
+        else user.hasEnoughPermission(permission, callback);
       });
     });
+  }
+  /**
+   * SocketIOオブジェクトを返すメソッド (デバッグ用)
+   *
+   * @method socketIO
+   * @return {SocketIO} SocketIOオブジェクト
+   */
+  WatchAuth.prototype.socketIO = function() {
+    return _socketIO;
   }
 
   return WatchAuth;

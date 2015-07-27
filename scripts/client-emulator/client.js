@@ -68,6 +68,13 @@ socket.on('request', function(data) {
       var response = generateResponse(data.token, {result: true});
       socket.emit('response', response);
       break;
+    case 'ping': // デバッグ用
+      for (var i = 0; i < 8; ++i) {
+        var response = generateResponse(data.token, {result: true});
+        socket.emit('response', response);
+      }
+
+      break;
   }
 
 });
