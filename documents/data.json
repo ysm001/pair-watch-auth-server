@@ -37,6 +37,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "lib/token-generator.js": {
+            "name": "lib/token-generator.js",
+            "modules": {},
+            "classes": {
+                "TokenGenerator": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "models/permission.js": {
             "name": "models/permission.js",
             "modules": {},
@@ -60,6 +69,15 @@
             "modules": {},
             "classes": {
                 "UserSchema": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "models/watch-auth.js": {
+            "name": "models/watch-auth.js",
+            "modules": {},
+            "classes": {
+                "WatchAuth": 1
             },
             "fors": {},
             "namespaces": {}
@@ -102,7 +120,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/request-dispatcher.js",
-            "line": 6,
+            "line": 7,
             "description": "Clientへのリクエスト送信を行うクラス",
             "is_constructor": 1
         },
@@ -119,6 +137,19 @@
             "description": "socket.ioの簡易wrapperクラス",
             "is_constructor": 1
         },
+        "TokenGenerator": {
+            "name": "TokenGenerator",
+            "shortname": "TokenGenerator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/token-generator.js",
+            "line": 2,
+            "description": "トークンを生成するクラス",
+            "is_constructor": 1
+        },
         "PermissionSchema": {
             "name": "PermissionSchema",
             "shortname": "PermissionSchema",
@@ -128,7 +159,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "models/permission.js",
-            "line": 4,
+            "line": 5,
             "description": "Permission Model",
             "is_constructor": 1
         },
@@ -156,6 +187,19 @@
             "file": "models/user.js",
             "line": 5,
             "description": "User Model",
+            "is_constructor": 1
+        },
+        "WatchAuth": {
+            "name": "WatchAuth",
+            "shortname": "WatchAuth",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "models/watch-auth.js",
+            "line": 14,
+            "description": "Apple Watchを使った認証を扱うクラス",
             "is_constructor": 1
         }
     },
@@ -225,7 +269,7 @@
         },
         {
             "file": "lib/distance-checker.js",
-            "line": 64,
+            "line": 63,
             "description": "距離計測のリクエストを送るメソッド",
             "itemtype": "method",
             "name": "_emitDistanceRequest",
@@ -278,7 +322,7 @@
         },
         {
             "file": "lib/pairing-checker.js",
-            "line": 45,
+            "line": 46,
             "description": "ペアリングの状態を確認するリクエストを送るメソッド",
             "itemtype": "method",
             "name": "_emit",
@@ -305,7 +349,7 @@
         },
         {
             "file": "lib/request-dispatcher.js",
-            "line": 14,
+            "line": 15,
             "description": "クライアントへのリクエスト送信を行い、結果を受け取るメソッド\n\n一定時間以内に返答された結果全てを配列としてcallbackに渡す",
             "itemtype": "method",
             "name": "dispatch",
@@ -330,13 +374,18 @@
                     "name": "timeout",
                     "description": "レスポンス待機時間",
                     "type": "Integer"
+                },
+                {
+                    "name": "constToken",
+                    "description": "(デバッグ用) constTokenをトークンに利用",
+                    "type": "Integer"
                 }
             ],
             "class": "RequestDispatcher"
         },
         {
             "file": "lib/request-dispatcher.js",
-            "line": 40,
+            "line": 45,
             "description": "レスポンスを受け取った際に呼ばれるcallback",
             "itemtype": "method",
             "name": "_onReceiveResponse",
@@ -481,28 +530,25 @@
             "class": "SocketIO"
         },
         {
-            "file": "models/permission.js",
-            "line": 15,
-            "description": "指定した複数のpermissionをbit flagに変換するメソッド",
+            "file": "lib/token-generator.js",
+            "line": 10,
+            "description": "トークン(16bit数値)を生成するメソッド",
             "itemtype": "method",
-            "name": "toBitFlags",
+            "name": "generate",
+            "static": 1,
             "params": [
                 {
-                    "name": "permissions",
-                    "description": "permissionの配列",
-                    "type": "[Permission]"
+                    "name": "16bitの数値",
+                    "description": "",
+                    "type": "Integer"
                 }
             ],
-            "return": {
-                "description": "bit flag",
-                "type": "Integer"
-            },
-            "class": "PermissionSchema"
+            "class": "TokenGenerator"
         },
         {
             "file": "models/permission.js",
-            "line": 28,
-            "description": "指定したpermissionが、要求されるpermissionを満たすかを検査するメソッド",
+            "line": 16,
+            "description": "指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド",
             "itemtype": "method",
             "name": "hasEnoughPermissions",
             "params": [
@@ -521,6 +567,21 @@
                 "description": "permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse",
                 "type": "[Boolean]"
             },
+            "class": "PermissionSchema"
+        },
+        {
+            "file": "models/permission.js",
+            "line": 31,
+            "description": "DB内の全てのPermissionを取得するメソッド (デバッグ用)",
+            "itemtype": "method",
+            "name": "findAll",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "返ってきたPermissionを受け取るコールバック",
+                    "type": "[Function]"
+                }
+            ],
             "class": "PermissionSchema"
         },
         {
@@ -602,6 +663,43 @@
                 }
             ],
             "class": "UserSchema"
+        },
+        {
+            "file": "models/watch-auth.js",
+            "line": 24,
+            "description": "認証を行うメソッド",
+            "itemtype": "method",
+            "name": "auth",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "ユーザID",
+                    "type": "String"
+                },
+                {
+                    "name": "permission",
+                    "description": "要求している権限",
+                    "type": "String"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "WatchAuth"
+        },
+        {
+            "file": "models/watch-auth.js",
+            "line": 80,
+            "description": "SocketIOオブジェクトを返すメソッド (デバッグ用)",
+            "itemtype": "method",
+            "name": "socketIO",
+            "return": {
+                "description": "SocketIOオブジェクト",
+                "type": "SocketIO"
+            },
+            "class": "WatchAuth"
         }
     ],
     "warnings": []

@@ -44,7 +44,9 @@
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
+                                <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -118,14 +120,15 @@ module.exports = (function() {
 
         if (!response) err = &quot;invalid token&quot;;
         else if (response.length == 0) err = &quot;no response&quot;;
-        else if (response.length &gt; 0 ) err = &quot;too many response&quot;;
+        // else if (response.length &gt; 1 ) err = &quot;too many response&quot;;
 
         next(err, response);
-      },
+      }
     ];
 
     async.waterfall(tasks, function(err, response) {
-      callback(null, response[0].result);
+      console.log(err)
+      callback(err, response[0].result);
     });
   }
 
@@ -141,7 +144,7 @@ module.exports = (function() {
    var _emitCheckPairingRequest = function(socket, callback, timeout) {
     RequestDispatcher.dispatch(socket, &#x27;check-pairing&#x27;, function(response) {
       callback(null, response);
-    }, timeout);
+    }, timeout, 22222/* debug */);
   }
 
   return PairingChecker;

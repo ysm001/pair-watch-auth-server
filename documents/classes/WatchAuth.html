@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>UserSchema</title>
+    <title>WatchAuth</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -83,12 +83,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>UserSchema Class</h1>
+<h1>WatchAuth Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/models_user.js.html#l5"><code>models&#x2F;user.js:5</code></a>
+            Defined in: <a href="../files/models_watch-auth.js.html#l14"><code>models&#x2F;watch-auth.js:14</code></a>
         </div>
 
 
@@ -96,14 +96,14 @@
 
 
 <div class="box intro">
-    <p>User Model</p>
+    <p>Apple Watchを使った認証を扱うクラス</p>
 
 </div>
 
     <div class="constructor">
         <h2>Constructor</h2>
-<div id="method_UserSchema" class="method item">
-    <h3 class="name"><code>UserSchema</code></h3>
+<div id="method_WatchAuth" class="method item">
+    <h3 class="name"><code>WatchAuth</code></h3>
 
         <span class="paren">()</span>
 
@@ -117,7 +117,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/models_user.js.html#l5"><code>models&#x2F;user.js:5</code></a>
+        <a href="../files/models_watch-auth.js.html#l14"><code>models&#x2F;watch-auth.js:14</code></a>
         </p>
 
 
@@ -150,15 +150,11 @@
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_findByPermissions">findByPermissions</a>
+                                <a href="#method_auth">auth</a>
 
                             </li>
                             <li class="index-item method">
-                                <a href="#method_hasEnoughPermission">hasEnoughPermission</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_hasEnoughPermissions">hasEnoughPermissions</a>
+                                <a href="#method_socketIO">socketIO</a>
 
                             </li>
                     </ul>
@@ -171,16 +167,19 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_findByPermissions" class="method item">
-    <h3 class="name"><code>findByPermissions</code></h3>
+<div id="method_auth" class="method item">
+    <h3 class="name"><code>auth</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>permissions</code>
+                        <code>id</code>
                 </li>
                 <li class="arg">
-                        <code>callback</code>
+                        <code>permission</code>
+                </li>
+                <li class="arg">
+                        <code>timeout</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -195,7 +194,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/models_user.js.html#l18"><code>models&#x2F;user.js:18</code></a>
+        <a href="../files/models_watch-auth.js.html#l24"><code>models&#x2F;watch-auth.js:24</code></a>
         </p>
 
 
@@ -203,7 +202,7 @@
     </div>
 
     <div class="description">
-        <p>指定したpermissionを満たす権限を持つUserを検索するメソッド</p>
+        <p>認証を行うメソッド</p>
 
     </div>
 
@@ -212,23 +211,34 @@
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">permissions</code>
-                        <span class="type">Permission</span>
+                        <code class="param-name">id</code>
+                        <span class="type">String</span>
 
 
                     <div class="param-description">
-                        <p>permissionの配列</p>
+                        <p>ユーザID</p>
 
                     </div>
 
                 </li>
                 <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
+                        <code class="param-name">permission</code>
+                        <span class="type">String</span>
 
 
                     <div class="param-description">
-                        <p>callback</p>
+                        <p>要求している権限</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">timeout</code>
+                        <span class="type">Integer</span>
+
+
+                    <div class="param-description">
+                        <p>レスポンス待機時間</p>
 
                     </div>
 
@@ -239,88 +249,14 @@
 
 
 </div>
-<div id="method_hasEnoughPermission" class="method item">
-    <h3 class="name"><code>hasEnoughPermission</code></h3>
+<div id="method_socketIO" class="method item">
+    <h3 class="name"><code>socketIO</code></h3>
 
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>permissions</code>
-                </li>
-                <li class="arg">
-                        <code>callback</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
 
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/models_user.js.html#l50"><code>models&#x2F;user.js:50</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">permissions</code>
-                        <span class="type">Permission</span>
-
-
-                    <div class="param-description">
-                        <p>permission</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>callback</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-
-
-</div>
-<div id="method_hasEnoughPermissions" class="method item">
-    <h3 class="name"><code>hasEnoughPermissions</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>permissions</code>
-                </li>
-                <li class="arg">
-                        <code>callback</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/SocketIO.html" class="crosslink">SocketIO</a></span>
+        </span>
 
 
 
@@ -331,7 +267,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/models_user.js.html#l34"><code>models&#x2F;user.js:34</code></a>
+        <a href="../files/models_watch-auth.js.html#l80"><code>models&#x2F;watch-auth.js:80</code></a>
         </p>
 
 
@@ -339,39 +275,20 @@
     </div>
 
     <div class="description">
-        <p>Userが、指定したpermissionを満たす権限を持つかを検査するメソッド</p>
+        <p>SocketIOオブジェクトを返すメソッド (デバッグ用)</p>
 
     </div>
 
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">permissions</code>
-                        <span class="type">Permission</span>
+        <div class="returns">
+            <h4>Returns:</h4>
 
+            <div class="returns-description">
+                        <span class="type"><a href="../classes/SocketIO.html" class="crosslink">SocketIO</a></span>:
+                    <p>SocketIOオブジェクト</p>
 
-                    <div class="param-description">
-                        <p>permissionの配列</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>callback</p>
-
-                    </div>
-
-                </li>
-            </ul>
+            </div>
         </div>
-
 
 
 </div>

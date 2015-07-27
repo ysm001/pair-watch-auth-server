@@ -44,7 +44,9 @@
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
+                                <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -85,10 +87,11 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-var Puid = require(&#x27;puid&#x27;);
+var TokenGenerator = require(&#x27;./token-generator.js&#x27;);
 
 module.exports = (function() {
   var _responses = {};
+  var _maxTimeout = 65536;
 
   /**
    * Clientへのリクエスト送信を行うクラス
@@ -109,9 +112,13 @@ module.exports = (function() {
    * @param {String} request リクエスト内容 
    * @param {Function} callback 結果を受け取るcallback
    * @param {Integer} timeout レスポンス待機時間
+   * @param {Integer} constToken (デバッグ用) constTokenをトークンに利用
    */
-  RequestDispatcher.dispatch = function(socket, request, callback, timeout) {
-    var token = (new Puid()).generate();
+  RequestDispatcher.dispatch = function(socket, request, callback, timeout, constToken) {
+    var token = constToken || TokenGenerator.generate();
+    if (timeout &gt; _maxTimeout) throw &quot;timeout is too long. (&gt; 65536)&quot;
+
+    _clearResponse.call(this, token);
 
     if(socket.listeners(&#x27;response&#x27;).length == 0) {
       socket.on(&#x27;response&#x27;, _onReceiveResponse.bind(this));
@@ -119,8 +126,8 @@ module.exports = (function() {
     socket.emit(&#x27;request&#x27;, {token: token, request: request});
 
     setTimeout(function() {
-      callback(_responses[token]);
-      delete _responses[token]
+      callback(_responses[token] || []);
+      _clearResponse.call(this, token);
     }.bind(this), timeout);
   }
 
@@ -135,6 +142,10 @@ module.exports = (function() {
     _responses[res.token] = _responses[res.token] || [];
     _responses[res.token].push(res.value);
     console.log(res);
+  }
+
+  var _clearResponse = function(token) {
+    delete _responses[token]
   }
 
   return RequestDispatcher;

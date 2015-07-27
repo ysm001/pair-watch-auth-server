@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib/distance-checker.js</title>
+    <title>lib/token-generator.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -83,88 +83,31 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: lib/distance-checker.js</h1>
+<h1 class="file-heading">File: lib/token-generator.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-var async = require(&#x27;async&#x27;)
-var lodash = require(&#x27;lodash&#x27;);
-var RequestDispatcher = require(&#x27;../lib/request-dispatcher.js&#x27;);
-
 module.exports = (function() {
   /**
-   * iOSアプリ間の距離を扱うクラス
+   * トークンを生成するクラス
    *
-   * (サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)
-   *
-   * @class DistanceChecker
+   * @class TokenGenerator
    * @constructor
    */
-  var DistanceChecker = function() {}
+  var TokenGenerator = function() {}
 
   /**
-   * 指定した権限を持つユーザが近くにいるかを確認するメソッド
+   * トークン(16bit数値)を生成するメソッド
    *
-   * @method checkPermissionHoldersAreNear
+   * @method generate
    * @static
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
+   * @param {Integer} 16bitの数値
    */
-  DistanceChecker.checkPermissionHoldersAreNear = function(socket, permissionHolders, callback, timeout) {
-    _findNearPermissionHolders(socket, permissionHolders, function(err, result) {
-      callback(err, result.length != 0);
-    }, timeout);
+  TokenGenerator.generate = function() {
+    return new Date().getTime() % 65536;
   }
 
-  /**
-   * 近くにいる権限を持つユーザを探すメソッド
-   *
-   * @method _findNearPermissionHolders
-   * @private
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  _findNearPermissionHolders = function(socket, permissionHolders, callback, timeout) {
-    permissionHolderIds = permissionHolders.map(function(holder) {return holder.deviceId});
-
-    var tasks = [
-      function(next) {
-        _emitDistanceRequest(socket, next, timeout);
-      },
-      function(distances, next) {
-        var nearUserIds = distances.
-          filter(function(distance) {return distance.value == &#x27;immediate&#x27; }).
-          map(function(distance) {return distance[&#x27;target-id&#x27;]});
-
-        var nearPermissionHolderIds = lodash.intersection(nearUserIds, permissionHolderIds);
-
-        next(null, nearPermissionHolderIds);
-      }
-    ];
-
-    async.waterfall(tasks, callback);
-  }
-
-  /**
-   * 距離計測のリクエストを送るメソッド
-   *
-   * @method _emitDistanceRequest
-   * @private
-   * @param {Socket} socket 送信先socket
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  var _emitDistanceRequest = function(socket, callback, timeout) {
-    RequestDispatcher.dispatch(socket, &#x27;distance&#x27;, function(response) {
-      callback(null, response);
-    }, timeout, 11111/* debug */);
-  }
-  
-  return DistanceChecker;
+  return TokenGenerator;
 })();
 
     </pre>
