@@ -14,7 +14,7 @@ module.exports = function(io) {
           error: err,
           'required-users': requiredUsers
         })
-      }, 1000);
+      }, 1500);
     }
   };
 }

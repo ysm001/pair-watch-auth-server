@@ -35,22 +35,22 @@ var generateDistanceResponse = function(token, target, distance) {
   });
 }
 
-var distanceRequestId = 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA';
+var distanceRequestId = 'AAAAAAAA-BBBB-AAAA-AAAA-AAAAAAAAAAAA';
 var advertisingTime = 300;
 var startAdvertising = function(uuid, major, minor, measuredPower) {
-  var uuid = uid
-  var major = token;
+  var uuid = uuid
+  var major = major;
   var minor = 1;
   var measuredPower = -59;
 
   Bleacon.startAdvertising(uuid, major, minor, measuredPower);
-  setTimeout(function() {Bleacon.stopAdverrising()}, advertisingTime);
+  setTimeout(function() {Bleacon.stopAdvertising()}, advertisingTime);
 }
 
 // TODO: advertising中に呼ばれた時の対策
 var sendRequestDistanceBeacon = function(token) {
-  var uuid = distanceRequestId
-  startAdvertising(uuid, major);
+  var uuid = uid
+  startAdvertising(uuid, token);
 }
 
 var sendResponseDistanceBeacon = function(token) {
@@ -63,7 +63,7 @@ socket.on('request', function(data) {
 
   switch (data.request) {
     case 'distance':
-      // sendRequestDistanceBeacon()
+      sendRequestDistanceBeacon(data.token)
       break;
     case 'check-pairing':
       var response = generateResponse(data.token, {result: true});
