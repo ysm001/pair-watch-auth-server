@@ -6,7 +6,7 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.auth(req.body, function(err, result, requiredUsers) {
+      watchAuth.auth(req.body.id, req.body.permission, function(err, result, requiredUsers) {
         if (err) console.log(err);
 
         res.send({

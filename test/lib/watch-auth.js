@@ -19,12 +19,10 @@ beforeEach(function(done) {
 describe('WatchAUth', function () {
   describe('auth', function () {
     it('存在しないユーザの認証は成功しない', function (done) {
-      var params = {
-        'id': 'not-existing-user',
-        'permission': 'ACCESS'
-      }
+      var id = 'not-existing-user';
+      var permission = 'ACCESS';
 
-      watchAuth.auth(params, function(err, response) {
+      watchAuth.auth(id, permission, function(err, response) {
         assert.equal(response, false);
         assert.equal(err, 'not-existing-user is not valid user.');
         done();
@@ -32,12 +30,10 @@ describe('WatchAUth', function () {
     });
 
     it('未接続のユーザの認証は成功しない', function (done) {
-      var params = {
-        'id': 'UID-ADMIN-USER-A',
-        'permission': 'ACCESS'
-      }
+      var id = 'UID-ADMIN-USER-A';
+      var permission = 'ACCESS';
 
-      watchAuth.auth(params, function(err, response) {
+      watchAuth.auth(id, permission, function(err, response) {
         assert.equal(response, false);
         assert.equal(err, 'UID-ADMIN-USER-A is not connected.');
         done();
@@ -47,13 +43,11 @@ describe('WatchAUth', function () {
     it('要求された権限を持つユーザの認証は成功する', function (done) {
       var users = ['UID-ADMIN-USER-A'];
 
-      var params = {
-        'id': 'UID-ADMIN-USER-A',
-        'permission': 'ACCESS'
-      }
+      var id = 'UID-ADMIN-USER-A';
+      var permission = 'ACCESS';
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
-        watchAuth.auth(params, function(err, response) {
+        watchAuth.auth(id, permission, function(err, response) {
           assert.equal(response, true);
           next();
         }, 100 );
@@ -63,13 +57,11 @@ describe('WatchAUth', function () {
     it('要求された権限を持たないユーザの認証は失敗し、権限を持つユーザ情報が返される', function (done) {
       var users = ['UID-USER-A'];
 
-      var params = {
-        'id': 'UID-USER-A',
-        'permission': 'EXEC_ROOT_COMMAND'
-      }
+      var id = 'UID-USER-A';
+      var permission = 'EXEC_ROOT_COMMAND';
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
-        watchAuth.auth(params, function(err, response, requiredUsers) {
+        watchAuth.auth(id, permission, function(err, response, requiredUsers) {
           assert.equal(err, null);
           assert.equal(response, false);
           assert.equal(requiredUsers.length, 2);
