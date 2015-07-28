@@ -50,7 +50,7 @@ db.users.insert([
   {
     name: 'iphone',
     deviceId: '4FDF59B0-2C19-46B3-9D63-A133660E75F7',
-    role: db.roles.findOne({name: 'user'})._id
+    role: db.roles.findOne({name: 'readonly-user'})._id
   },
   {
     name: 'admin-iphone',
