@@ -49,7 +49,7 @@ db.users.insert([
   },
   {
     name: 'iphone',
-    deviceId: '1ABF357A-08C9-4D65-8EC5-18D2AB95E640',
+    deviceId: '4FDF59B0-2C19-46B3-9D63-A133660E75F7',
     role: db.roles.findOne({name: 'user'})._id
   },
   {
