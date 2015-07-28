@@ -4,25 +4,29 @@
 ## Setup
 
 ```
+# node moduleのインストール
 npm install
-npm run-script seed
+
+# mongoDBの起動
+mongod --dbpath ./data/db
+
+# DBに初期データを投入
+npm run seed
 ```
 
 ## Run
-
-### Database
-
-```
-mongod --dbpath ./data/db
-```
-
-### Server
 
 ```
 npm start
 ```
 
-### Client Simulator
+## Test
+
+```
+npm test
+```
+
+### Client Simulator (for debug)
 
 ```
 node scripts/client-emulator/client.js <UUID>
