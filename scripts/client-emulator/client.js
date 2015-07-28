@@ -43,6 +43,11 @@ var startAdvertising = function(uuid, major, minor, measuredPower) {
   var minor = 1;
   var measuredPower = -59;
 
+  console.log("beacon-------------------------------------------");
+  console.log("uuid: " + uuid);
+  console.log("major: " + major);
+  console.log("minor: " + minor);
+  console.log("-------------------------------------------------");
   Bleacon.startAdvertising(uuid, major, minor, measuredPower);
   setTimeout(function() {Bleacon.stopAdvertising()}, advertisingTime);
 }
