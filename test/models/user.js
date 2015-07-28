@@ -18,10 +18,10 @@ describe('User', function () {
       });
     });
 
-    it('[ACCESS, EXEC_COMMAND]権限を持つのは6名', function(done) {
+    it('[ACCESS, EXEC_COMMAND]権限を持つのは5名', function(done) {
       var perms = PermissionHelper.getPermissions(['ACCESS', 'EXEC_COMMAND']);
       User.findByPermissions(perms, function(err, users) {
-        assert.equal(users.length, 6);
+        assert.equal(users.length, 5);
         done();
       });
     });
