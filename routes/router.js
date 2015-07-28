@@ -4,6 +4,7 @@ module.exports = function(app, io) {
   app.get('/auth', watchAuth.auth); // debug
   app.post('/auth', watchAuth.auth);
   app.get('/users', user.list);
+  app.post('/distances', user.distance);
 
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {

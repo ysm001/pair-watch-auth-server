@@ -1,5 +1,6 @@
 var express = require('express');
 var User = require('../models/user.js');
+var RequestDispatcher = require('../lib/request-dispatcher.js');
 
 module.exports = (function() {
   return {
@@ -10,6 +11,11 @@ module.exports = (function() {
 
         res.send(response)
       });
+    },
+    distance: function(req, res) {
+      RequestDispatcher.receiveHttpResponse(req.body)
+
+      res.send({"result": true})
     }
   };
 })()
