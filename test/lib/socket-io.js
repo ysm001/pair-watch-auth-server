@@ -2,9 +2,11 @@ var assert = require('assert');
 var ServerHelper = require('../support/server-helper.js');
 var SocketIO = require('../../lib/socket-io.js');
 var ClientHelper = require('../support/client-helper.js');
+var LoggerHelper = require('../support/logger-helper.js');
 
 var socketIO;
 before(function() {
+  LoggerHelper.setLevel('info');
   ServerHelper.init();
   socketIO = new SocketIO(ServerHelper.io);
 });
@@ -56,5 +58,19 @@ describe('SocketIO', function () {
       }, done);
     });
   });
+
+  // describe('disconnectAll', function () {
+  //   it('切断後、socketsのサイズは0になる', function (done) {
+  //     var users = 
+  //       ['UID-READONLY-USER-A', 'UID-READONLY-USER-B',
+  //         'UID-USER-A', 'UID-USER-B', 'UID-ADMIN-USER-A'];
+
+  //     ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
+  //       socketIO.disconnectAll();
+  //       assert.equal(socketIO.sockets().length, 0);
+  //       next();
+  //     }, done);
+  //   });
+  // });
 });
 

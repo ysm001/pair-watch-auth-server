@@ -25,21 +25,20 @@ module.exports = (function() {
    * 認証を行うメソッド
    *
    * @method auth
-   * @param {[Object]} params 認証用パラメータ
-   * @param {String} params.id ユーザID
-   * @param {String} params.permission 要求している権限
+   * @param {String} id ユーザID
+   * @param {String} permission 要求している権限
    * @param {Integer} timeout レスポンス待機時間
    */
-  WatchAuth.prototype.auth = function(params, callback, timeout) {
+  WatchAuth.prototype.auth = function(id, permission, callback, timeout) {
     var sockets = _socketIO.sockets();
-    var socket = _socketIO.socket(params.id);
+    var socket = _socketIO.socket(id);
 
     var tasks = [
       function(next) {
-        _checkPermission.call(this, params, next, timeout);
+        _checkPermission.call(this, id, permission, next);
       },
       function(result, requiredUsers, next) {
-        next(!socket ? params.id + " is not connected." : null, result, requiredUsers);
+        next(!socket ? id + " is not connected." : null, result, requiredUsers);
       },
       function(result, requiredUsers,next) {
         _checkAccessibility(socket, result, requiredUsers, next, timeout);
@@ -70,10 +69,10 @@ module.exports = (function() {
     });
   }
 
-  var _checkPermission = function(params, callback) {
-    Permission.findOne({name: params.permission}, function(err, permission) {
-      User.findOne({deviceId: params.id}, function(err, user) {
-        if (err || !user) callback(err || params.id + ' is not valid user.', false);
+  var _checkPermission = function(id, permission, callback) {
+    Permission.findOne({name: permission}, function(err, permission) {
+      User.findOne({deviceId: id}, function(err, user) {
+        if (err || !user) callback(err || id + ' is not valid user.', false);
         else user.hasEnoughPermission(permission, callback);
       });
     });

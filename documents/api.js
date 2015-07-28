@@ -7,7 +7,9 @@ YUI.add("yuidoc-meta", function(Y) {
         "RequestDispatcher",
         "RoleSchema",
         "SocketIO",
-        "UserSchema"
+        "TokenGenerator",
+        "UserSchema",
+        "WatchAuth"
     ],
     "modules": [],
     "allModules": []

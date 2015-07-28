@@ -16,6 +16,8 @@ module.exports = (function() {
   }
 
   ServerHelper.waitForDisconnect = function(socketIO, done) {
+    socketIO.disconnectAll();
+
     if (socketIO.sockets().length != 0) {
       setTimeout(ServerHelper.waitForDisconnect.bind(this, socketIO, done), 100);
     } else {

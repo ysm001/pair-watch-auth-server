@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib/distance-checker.js</title>
+    <title>models/watch-auth.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -83,88 +83,100 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: lib/distance-checker.js</h1>
+<h1 class="file-heading">File: models/watch-auth.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-var async = require(&#x27;async&#x27;)
-var lodash = require(&#x27;lodash&#x27;);
+var SocketIO = require(&#x27;../lib/socket-io.js&#x27;);
 var RequestDispatcher = require(&#x27;../lib/request-dispatcher.js&#x27;);
+var Puid = require(&#x27;puid&#x27;);
+var User = require(&#x27;./user.js&#x27;);
+var Permission = require(&#x27;./permission.js&#x27;);
+var async = require(&#x27;async&#x27;)
+var PairingChecker = require(&#x27;../lib/pairing-checker.js&#x27;)
+var DistanceChecker = require(&#x27;../lib/distance-checker.js&#x27;)
 
 module.exports = (function() {
-  /**
-   * iOSアプリ間の距離を扱うクラス
-   *
-   * (サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)
-   *
-   * @class DistanceChecker
-   * @constructor
-   */
-  var DistanceChecker = function() {}
+  var _socketIO = null;
+  var _requestDispatcher = null;
 
   /**
-   * 指定した権限を持つユーザが近くにいるかを確認するメソッド
+   * Apple Watchを使った認証を扱うクラス
    *
-   * @method checkPermissionHoldersAreNear
-   * @static
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
+   * @class WatchAuth
+   * @constructor
    */
-  DistanceChecker.checkPermissionHoldersAreNear = function(socket, permissionHolders, callback, timeout) {
-    _findNearPermissionHolders(socket, permissionHolders, function(err, result) {
-      callback(err, result.length != 0);
-    }, timeout);
+  var WatchAuth = function(io) {
+    _socketIO = new SocketIO(io);
   }
 
   /**
-   * 近くにいる権限を持つユーザを探すメソッド
+   * 認証を行うメソッド
    *
-   * @method _findNearPermissionHolders
-   * @private
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
+   * @method auth
+   * @param {String} id ユーザID
+   * @param {String} permission 要求している権限
+   * @param {Integer} timeout レスポンス待機時間
    */
-  _findNearPermissionHolders = function(socket, permissionHolders, callback, timeout) {
-    permissionHolderIds = permissionHolders.map(function(holder) {return holder.deviceId});
+  WatchAuth.prototype.auth = function(id, permission, callback, timeout) {
+    var sockets = _socketIO.sockets();
+    var socket = _socketIO.socket(id);
 
     var tasks = [
       function(next) {
-        _emitDistanceRequest(socket, next, timeout);
+        _checkPermission.call(this, id, permission, next);
       },
-      function(distances, next) {
-        var nearUserIds = distances.
-          filter(function(distance) {return distance.value == &#x27;immediate&#x27; }).
-          map(function(distance) {return distance[&#x27;target-id&#x27;]});
-
-        var nearPermissionHolderIds = lodash.intersection(nearUserIds, permissionHolderIds);
-
-        next(null, nearPermissionHolderIds);
+      function(result, requiredUsers, next) {
+        next(!socket ? id + &quot; is not connected.&quot; : null, result, requiredUsers);
+      },
+      function(result, requiredUsers,next) {
+        _checkAccessibility(socket, result, requiredUsers, next, timeout);
       }
     ];
 
-    async.waterfall(tasks, callback);
+    async.waterfall(tasks, function(err, result, requiredUsers) {
+      callback(err, result &amp;&amp; !err, requiredUsers);
+    });
   }
 
-  /**
-   * 距離計測のリクエストを送るメソッド
-   *
-   * @method _emitDistanceRequest
-   * @private
-   * @param {Socket} socket 送信先socket
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  var _emitDistanceRequest = function(socket, callback, timeout) {
-    RequestDispatcher.dispatch(socket, &#x27;distance&#x27;, function(response) {
-      callback(null, response);
-    }, timeout, 11111/* debug */);
+  var _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
+    var tasks = [
+      function(next) {
+        PairingChecker.check(socket, next, timeout);
+      },
+      function(result, next) {
+        next(!result ? &quot;pairing check is failed.&quot; : null, result);
+      },
+      function(result, next) {
+        if (hasPermission) next(null, true);
+        else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
+      }
+    ];
+
+    async.waterfall(tasks , function(err, result) {
+      callback(err, result, requiredUsers);
+    });
   }
-  
-  return DistanceChecker;
+
+  var _checkPermission = function(id, permission, callback) {
+    Permission.findOne({name: permission}, function(err, permission) {
+      User.findOne({deviceId: id}, function(err, user) {
+        if (err || !user) callback(err || id + &#x27; is not valid user.&#x27;, false);
+        else user.hasEnoughPermission(permission, callback);
+      });
+    });
+  }
+  /**
+   * SocketIOオブジェクトを返すメソッド (デバッグ用)
+   *
+   * @method socketIO
+   * @return {SocketIO} SocketIOオブジェクト
+   */
+  WatchAuth.prototype.socketIO = function() {
+    return _socketIO;
+  }
+
+  return WatchAuth;
 })();
 
     </pre>

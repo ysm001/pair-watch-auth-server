@@ -6,7 +6,7 @@ module.exports = (function() {
   ClientHelper.spawn = function(name) {
     var file = 'scripts/client-emulator/client.js'
 
-    var client = spawn('node', [file, name]);
+    var client = spawn('node', [file, name, 1]);
     client.stdout.on('data', function (data) {
         // console.log(name + ': ' + data);
     });
