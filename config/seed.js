@@ -53,13 +53,28 @@ db.users.insert([
     role: db.roles.findOne({name: 'readonly-user'})._id
   },
   {
-    name: 'admin-iphone',
+    name: 'admin-iphone-A',
     deviceId: 'AC35AFC2-8E8C-4BEB-AF02-0E33BA93B986',
+    role: db.roles.findOne({name: 'admin'})._id
+  },
+  {
+    name: 'admin-iphone-B',
+    deviceId: '32AD2F8E-422F-4F77-8010-8657B7C8E72D',
     role: db.roles.findOne({name: 'admin'})._id
   },
   {
     name: 'user-C',
     deviceId: 'AAAAAAAA-BBBB-AAAA-AAAA-AAAAAAAAAAAA',
+    role: db.roles.findOne({name: 'readonly-user'})._id
+  },
+  {
+    name: 'admin-C',
+    deviceId: '12345678-1234-1234-1234-123456789012',
+    role: db.roles.findOne({name: 'admin'})._id
+  },
+  {
+    name: 'iphone-simulator',
+    deviceId: 'E4D5CE7F-0F20-4FA3-B0BB-2A638ECB971F',
     role: db.roles.findOne({name: 'readonly-user'})._id
   },
 ]);
