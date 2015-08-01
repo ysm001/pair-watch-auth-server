@@ -45,8 +45,8 @@ module.exports = (function() {
       }
     ];
 
-    async.waterfall(tasks, function(err, result, requiredUsers) {
-      callback(err, result && !err, requiredUsers);
+    async.waterfall(tasks, function(err, result, requiredUsers, nearPermissionHolderIds) {
+      callback(err, result && !err, requiredUsers, nearPermissionHolderIds);
     });
   }
 
@@ -64,8 +64,8 @@ module.exports = (function() {
       }
     ];
 
-    async.waterfall(tasks , function(err, result) {
-      callback(err, result, requiredUsers);
+    async.waterfall(tasks , function(err, result, nearPermissionHolderIds) {
+      callback(err, result, requiredUsers, nearPermissionHolderIds);
     });
   }
 
