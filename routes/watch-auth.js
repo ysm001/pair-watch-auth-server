@@ -25,8 +25,8 @@ module.exports = function(io) {
         })
       })
     } else {
-      for (var socket in nearPermissionHoldersSockets) {
-        if (!socket) continue;
+      nearPermissionHoldersSockets.forEach(function(socket) {
+        if (!socket) return;
 
         NotificationDispatcher.dispatch(socket, {
           type: 'permission-used',
@@ -35,11 +35,33 @@ module.exports = function(io) {
             permission: 'dummy'
           }
         })
-      }
+      })
     }
 
     var type = result ? 'auth-successed' : 'auth-failed'
-    var data = result ? nearPermissionHolderIds : requiredUsers
+    var users = null
+    if (!result) {
+      users = requiredUsers
+    } else {
+      var users = requiredUsers.filter(function(user) {
+        for (var i = 0, n = nearPermissionHolderIds.length; i < n; ++i) {
+          if (nearPermissionHolderIds[i] == user.deviceId) return true
+        }
+
+        return false
+      })
+    }
+
+    data = users.map(function(user) {
+      return {
+        name: user.name,
+        id: user.deviceId,
+        iconUrl: null,
+        connected: (socketIO.socket(user.deviceId) != null)
+      }
+    })
+
+    console.log(data)
     NotificationDispatcher.dispatch(userSocket, {
       type: type,
       data: data
