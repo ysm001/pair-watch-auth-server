@@ -31,6 +31,11 @@ module.exports = (function() {
     });
   });
 
+  UserSchema.static('findByDeviceIds', function(deviceIds, callback) {
+    var condition = deviceIds.map(function(id) {return {deviceId: id}})
+    this.find({$or: condition}, callback)
+  });
+
   /**
    * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
    *
