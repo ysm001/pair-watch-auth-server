@@ -7,10 +7,10 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.auth(req.body.id, req.body.permission, function(err, result, requiredUsers, nearPermissionHolderIds) {
+      watchAuth.auth(req.body.id, req.body.permission, function(err, result, requiredUsers, nearPermissionHolders) {
         if (err) console.log(err);
 
-        AuthResultNotificator.notify(watchAuth.socketIO(), req.body.id, req.body.permission, result, requiredUsers, nearPermissionHolderIds)
+        AuthResultNotificator.notify(watchAuth.socketIO(), req.body.id, req.body.permission, result, requiredUsers, nearPermissionHolders)
 
         res.send({
           result: result,
