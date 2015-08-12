@@ -66,7 +66,7 @@ describe('WatchAUth', function () {
         watchAuth.auth(id, permission, function(err, response, requiredUsers) {
           assert.equal(err, null);
           assert.equal(response, false);
-          assert.equal(requiredUsers.length, 3);
+          assert.equal(requiredUsers.length, 5);
           next();
         }, 100 );
       }, done);
