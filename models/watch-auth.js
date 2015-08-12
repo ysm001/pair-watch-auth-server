@@ -29,57 +29,42 @@ const WatchAuth = function(io) {
  * @param {Function} callback コールバック
  * @param {Integer} timeout レスポンス待機時間
  */
-WatchAuth.prototype.auth = function(id, permission, callback, timeout) {
+WatchAuth.prototype.auth = function(id, permission, timeout) {
   const socket = _socketIO.socket(id);
+  if (!socket) {
+    return Promise.reject(Error(id + ' is not connected'));
+  }
 
-  const tasks = [
-    function(next) {
-      _checkPermission.call(this, id, permission, next);
-    },
-    function(result, requiredUsers, next) {
-      next(!socket ? id + ' is not connected.' : null, result, requiredUsers);
-    },
-    function(result, requiredUsers, next) {
-      _checkAccessibility(socket, result, requiredUsers, next, timeout);
-    }
-  ];
-
-  async.waterfall(tasks, function(err, result, requiredUsers, nearPermissionHolders) {
-    callback(err, result && !err, requiredUsers, nearPermissionHolders);
+  return _checkPermission(id, permission).then(function(hasPermission) {
+    return [hasPermission, User.findByPermission(permission)]
+  }).then(function(hasPermission, requiredUsers) {
+    return _checkAccessibility(socket, hasPermission, requiredUsers, timeout)
   });
 };
 
-const _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
-  const tasks = [
-    function(next) {
-      PairingChecker.check(socket, next, timeout);
-    },
-    function(result, next) {
-      next(!result ? 'pairing check is failed.' : null, result);
-    },
-    function(result, next) {
-      if (hasPermission) {
-        next(null, true);
-      } else {
-        DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
-      }
-    }
-  ];
+const _checkAccessibility = function(socket, hasPermission, requiredUsers, timeout) {
+  return PairingChecker.check(socket, timeout).then(function(result) {
+    if (hasPermission) {
+      return {accessibility: true};
+    } else {
+      const promise = DistanceChecker.findNearPermissionHolders(socket, requiredUsers, timeout)
 
-  async.waterfall(tasks, function(err, result, nearPermissionHolders) {
-    callback(err, result, requiredUsers, nearPermissionHolders);
+      return promise.then(function(nearPermissionHolders) {
+        return {
+          accessibility: permissionHolders.length != 0,
+          requiredUsers: requiredUsers,
+          nearPermissionHolders: nearPermissionHolders
+        };
+      });
+    }
   });
 };
 
-const _checkPermission = function(id, permissionName, callback) {
-  Permission.findOne({name: permissionName}, function(permissionFindErr, permission) {
-    User.findOne({deviceId: id}, function(userFindErr, user) {
-      if (userFindErr || !user) {
-        callback(userFindErr || id + ' is not valid user.', false);
-      }else {
-        user.hasEnoughPermission(permission, callback);
-      }
-    });
+const _checkPermission = function(id, permissionName) {
+  return User.findByDeviceId(id).then(function(user) {
+    return [user, Permission.findByName(permissionName)];
+  }).spread(function(user, permission) {
+    return user.hasEnoughPermission(permission);
   });
 };
 

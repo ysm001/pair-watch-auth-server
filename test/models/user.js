@@ -12,7 +12,7 @@ describe('User', function () {
   describe('findByPermissions', function () {
     it('[ACCESS]権限を持つのは9名', function(done) {
       var perms = PermissionHelper.getPermissions(['ACCESS']);
-      User.findByPermissions(perms, function(err, users) {
+      User.findByPermissions(perms).then(function(users) {
         assert.equal(users.length, 12);
         done();
       });
@@ -20,7 +20,7 @@ describe('User', function () {
 
     it('[ACCESS, EXEC_COMMAND]権限を持つのは5名', function(done) {
       var perms = PermissionHelper.getPermissions(['ACCESS', 'EXEC_COMMAND']);
-      User.findByPermissions(perms, function(err, users) {
+      User.findByPermissions(perms).then(function(users) {
         assert.equal(users.length, 8);
         done();
       });
@@ -28,7 +28,7 @@ describe('User', function () {
 
     it('[ACCESS, EXEC_COMMAND, EXEC_ROOT_COMMAND]権限を持つのは3名', function(done) {
       var perms = PermissionHelper.getPermissions(['ACCESS', 'EXEC_COMMAND', 'EXEC_ROOT_COMMAND']);
-      User.findByPermissions(perms, function(err, users) {
+      User.findByPermissions(perms).then(function(users) {
         assert.equal(users.length, 5);
         done();
       });

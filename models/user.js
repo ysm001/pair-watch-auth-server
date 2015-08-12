@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const Role = require('./role.js');
+const promiseQuery = require('../lib/promise-query.js');
+const Promise = require('bluebird')
 
 /**
  * User Model
@@ -23,25 +25,28 @@ const UserSchema = new mongoose.Schema({
  * @param {[Permission]} permissions permissionの配列
  * @param {Function} callback callback
  */
-UserSchema.static('findByPermissions', function(permissions, callback) {
-  const self = this;
-
-  Role.findByPermissions(permissions, function(err, roles) {
+UserSchema.static('findByPermissions', function(permissions) {
+  return Role.findByPermissions(permissions).then(function(roles) {
     const roleIds = roles.map(function(role) {return role.id;});
-
-    self.find({role: {$in: roleIds}}, callback);
-  });
+    return promiseQuery(this.find({role: {$in: roleIds}}));
+  }.bind(this));
 });
 
-UserSchema.static('findByDeviceIds', function(deviceIds, callback) {
+UserSchema.static('findByPermission', function(permission) {
+  return this.model('User').findByPermissions([permission]);
+});
+
+UserSchema.static('findByDeviceId', function(deviceId) {
+  return promiseQuery(this.findOne({deviceId: deviceId}));
+});
+
+UserSchema.static('findByDeviceIds', function(deviceIds) {
   if (deviceIds.length === 0) {
-    callback(null, []);
-    return;
+    return Promise.reject(Error('user not found'));
   }
 
   const condition = deviceIds.map(function(id) {return {deviceId: id};});
-
-  this.find({$or: condition}, callback);
+  return promiseQuery(this.find({$or: condition}));
 });
 
 /**
@@ -51,14 +56,10 @@ UserSchema.static('findByDeviceIds', function(deviceIds, callback) {
  * @param {[Permission]} permissions permissionの配列
  * @param {Function} callback callback
  */
-UserSchema.method('hasEnoughPermissions', function(permissions, callback) {
-  const self = this;
-
-  this.model('User').findByPermissions(permissions, function(err, users) {
-    const result = users.some(function(user) {return user.id === self.id;});
-
-    callback(err, result, users);
-  });
+UserSchema.method('hasEnoughPermissions', function(permissions) {
+  return this.model('User').findByPermissions(permissions).then(function(users) {
+    return users.some(function(user) {return user.id === this.id;}.bind(this));
+  }.bind(this));
 });
 
 /**

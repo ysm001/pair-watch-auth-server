@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Permission = require('./permission.js');
+const promiseQuery = require('../lib/promise-query.js');
 
 /**
  * Role Model
@@ -21,13 +22,9 @@ const RoleSchema = new mongoose.Schema({
  * @param {[Permission]} permissions permissionの配列
  * @param {Function} callback callback
  */
-RoleSchema.static('findByPermissions', function(permissions, callback) {
-  this.find({}).populate('permissions').exec(function(err, roles) {
-    const results = roles.filter(function(role) {
-      return Permission.hasEnoughPermissions(role.permissions, permissions);
-    });
-
-    callback(err, results);
+RoleSchema.static('findByPermissions', function(permissions) {
+  return promiseQuery(this.find({}).populate('permissions')).filter(function(role) {
+    return Permission.hasEnoughPermissions(role.permissions, permissions);
   });
 });
 

@@ -7,17 +7,15 @@ module.exports = function(io) {
 
   return {
     auth: function(req, res) {
-      watchAuth.auth(req.body.id, req.body.permission, function(err, result, requiredUsers, nearPermissionHolders) {
-        if (err) console.log(err);
-
-        AuthResultNotificator.notify(watchAuth.socketIO(), req.body.id, req.body.permission, result, requiredUsers, nearPermissionHolders)
+      watchAuth.auth(req.body.id, req.body.permission, 2000).then(function(result) {
+        AuthResultNotificator.notify(watchAuth.socketIO(), req.body.id, req.body.permission, result, result.requiredUsers, result.nearPermissionHolders)
 
         res.send({
-          result: result,
-          error: err,
-          'required-users': requiredUsers
+          result: result.accessibility,
+          // error: err,
+          //'required-users': requiredUsers
         })
-      }, 2000);
+      });
     }
   };
 }

@@ -22,9 +22,9 @@ module.exports = (function() {
     var clients = users.map(function(user) {return ClientHelper.spawn(user)});
 
     ClientHelper._waitForConnect(socketIO, users, function() {
-      testFunction(clients, function() {
+      testFunction(clients, function(err) {
         clients.forEach(function(client) {client.kill();});
-        done();
+        done(err);
       });
     });
   };

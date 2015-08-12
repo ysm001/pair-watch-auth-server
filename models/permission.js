@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const lodash = require('lodash');
+const promiseQuery = require('../lib/promise-query.js');
+const Promise = require('bluebird')
 
 /**
  * Permission Model
@@ -29,21 +31,25 @@ PermissionSchema.static('hasEnoughPermissions', function(permissions, requiredPe
   return lodash.difference(requiredPermissionNames, permissionNames).length === 0;
 });
 
+PermissionSchema.static('findByName', function (name) {
+  return promiseQuery(this.findOne({name: name}));
+});
+
 /**
  * DB内の全てのPermissionを取得するメソッド (デバッグ用)
  *
  * @method findAll
  * @param {[Function]} callback 返ってきたPermissionを受け取るコールバック
  */
-PermissionSchema.static('findAll', function (callback) {
-  this.find({}, function(err, permissions) {
+PermissionSchema.static('findAll', function () {
+  return promiseQuery(this.find({})).then(function(permissions) {
     const results = {};
 
     permissions.forEach(function(permission) {
       results[permission.name] = permission;
     });
 
-    callback(results);
+    return results;
   });
 });
 

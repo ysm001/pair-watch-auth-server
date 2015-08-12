@@ -5,7 +5,7 @@ module.exports = (function() {
   PermissionHelper.permissions = {};
 
   PermissionHelper.init = function (done) {
-    Permission.findAll(function(results) {
+    Permission.findAll().then(function(results) {
       PermissionHelper.permissions = results;
       done();
     });

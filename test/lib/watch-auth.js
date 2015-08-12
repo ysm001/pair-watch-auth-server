@@ -21,25 +21,26 @@ beforeEach(function(done) {
 describe('WatchAUth', function () {
   describe('auth', function () {
     it('存在しないユーザの認証は成功しない', function (done) {
-      var id = 'not-existing-user';
+      var id = 'not-existing-user'
+      var users = [id];
       var permission = 'ACCESS';
 
-      watchAuth.auth(id, permission, function(err, response) {
-        assert.equal(response, false);
-        assert.equal(err, 'not-existing-user is not valid user.');
-        done();
-      }, 100 );
+      ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
+        watchAuth.auth(id, permission, 100).catch(function(err) {
+          assert.equal(err.message, 'not-existing-user is not valid user.');
+          next();
+        }).catch(function(err) {next(err)});
+      }, done);
     });
 
     it('未接続のユーザの認証は成功しない', function (done) {
       var id = 'UID-ADMIN-USER-A';
       var permission = 'ACCESS';
 
-      watchAuth.auth(id, permission, function(err, response) {
-        assert.equal(response, false);
-        assert.equal(err, 'UID-ADMIN-USER-A is not connected.');
+      watchAuth.auth(id, permission, 100).then(function() {}).catch(function(err) {
+        assert.equal(err.message, 'UID-ADMIN-USER-A is not connected.');
         done();
-      }, 100 );
+      }).catch(function(err) {done(err)});
     });
 
     it('要求された権限を持つユーザの認証は成功する', function (done) {
@@ -49,10 +50,10 @@ describe('WatchAUth', function () {
       var permission = 'ACCESS';
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
-        watchAuth.auth(id, permission, function(err, response) {
-          assert.equal(response, true);
+        watchAuth.auth(id, permission, 100).then(function(result) {
+          assert.equal(result.accessibility, true);
           next();
-        }, 100 );
+        }).catch(function(err) {next(err)});
       }, done);
     });
 
@@ -63,12 +64,10 @@ describe('WatchAUth', function () {
       var permission = 'EXEC_ROOT_COMMAND';
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
-        watchAuth.auth(id, permission, function(err, response, requiredUsers) {
-          assert.equal(err, null);
-          assert.equal(response, false);
-          assert.equal(requiredUsers.length, 5);
+        watchAuth.auth(id, permission, 100).then(function() {}).catch(function(err) {
+          assert.equal(err.requiredUsers.length, 5);
           next();
-        }, 100 );
+        }).catch(function(err) {next(err)});
       }, done);
     });
   });

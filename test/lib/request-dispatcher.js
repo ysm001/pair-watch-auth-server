@@ -22,10 +22,10 @@ describe('RequestDispatcher', function () {
       var users = ['UID-READONLY-USER-A'];
       var testFunction = function(clients, next) {
         var socket = socketIO.socket(users[0]);
-        RequestDispatcher.dispatch(socket, 'ping', function(response) {
-          assert.equal(response.length, 8);
+        RequestDispatcher.dispatch(socket, 'ping', 1000).then(function(result) {
+          assert.equal(result.length, 8);
           next();
-        }, 1000);
+        });
       }
 
       ClientHelper.doTestWithUsers(socketIO, users, testFunction, done);
