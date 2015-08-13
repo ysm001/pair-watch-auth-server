@@ -1,6 +1,7 @@
 var express = require('express');
 var WatchAuth = require('../models/watch-auth.js');
 var AuthResultNotificator = require('../lib/auth-result-notificator.js')
+var PermissionError = require('../lib/errors/permission-error.js');
 
 module.exports = function(io) {
   var watchAuth = new WatchAuth(io);
@@ -12,9 +13,12 @@ module.exports = function(io) {
 
         res.send({
           result: result.accessibility,
-          // error: err,
-          //'required-users': requiredUsers
         })
+      }).catch(function(err) {
+        res.send({
+          result: false,
+          error: err 
+        });
       });
     }
   };
