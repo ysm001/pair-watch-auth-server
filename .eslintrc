@@ -30,7 +30,6 @@
     "no-empty": [2],// 空のブロック文を許可しない
     "no-ex-assign": [2],// 例外オブジェクトの上書きを許可しない
     "no-extra-boolean-cast": [2],// 式ですでに真偽値に強制変換されるようなコンテキストでの2重否定を許可しない
-    "no-extra-parens": [2],// 不要な括弧を許可しない
     "no-extra-semi": [2],// 不要なセミコロンを許可しない
     "no-func-assign": [2],// 関数への代入、上書きを許可しない
     "no-invalid-regexp": [2],// 無効な正規表現を許可しない
@@ -47,7 +46,7 @@
     // Best Practices
     "accessor-pairs": [2],// setterを持ってgetterを持たないオブジェクトの作成を許可しない
     "block-scoped-var": [2],// 宣言しているコンテキストの外で使用されている変数を許可しない
-    "complexity": [2, 2],// 循環的複雑度と、その閾値
+    "complexity": [2, 5],// 循環的複雑度と、その閾値
     "consistent-return": [2],// 何も値を返さない(undefined)ステートメントと値を返すステートメントの混在を許可しない
     "curly": [2],// 中括弧の省略を許可しない
     "default-case": [2],//Swith文でのdefaultの省略を許可しない
@@ -108,7 +107,7 @@
     "no-shadow": [2],// シャドーイングを許可しない
     "no-undef-init": [2],// undefinedによる初期化を許可しない
     "no-unused-vars": [2],// 使用することのない変数を許可しない
-    "no-use-before-define": [1],// 定義する前に使用することを許可しない
+    "no-use-before-define": [0],// 定義する前に使用することを許可しない
 
     // Node.js
     "handle-callback-err": [1],// コールバックパターンでのエラーハンドリングの省略を許可しない
@@ -187,7 +186,7 @@
     "max-depth": [2, 2],// ブロックのネストをn個以上許可しない
     "max-len": [2, 120, 2],// １行にn以上の文字数を許可しない
     "max-params": [2, 3],// n個以上の引数を許可しない
-    "max-statements": [1, 3],// 関数内でn個以上のステートメントを許可しない
+    "max-statements": [1, 5],// 関数内でn個以上のステートメントを許可しない
     "no-bitwise": [2],// ビット演算を許可しない
   }
 }
