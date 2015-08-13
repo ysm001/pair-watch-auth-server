@@ -13,7 +13,7 @@ module.exports = function(io) {
 
         res.send({
           result: result.accessibility,
-        })
+        });
       }).catch(function(err) {
         AuthResultNotificator.notify(watchAuth.socketIO(), req.body.id, req.body.permission, false, err.requiredUsers, err.nearPermissionHolders)
 

@@ -85,6 +85,10 @@ socket.on('request', function(data) {
 
 });
 
+socket.on('notification', function(data) {
+  console.error(data);
+});
+
 if (!disableBeacon) {
   Bleacon.startScanning();
   Bleacon.on('discover', function(bleacon) {

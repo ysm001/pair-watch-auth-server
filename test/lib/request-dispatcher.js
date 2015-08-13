@@ -18,7 +18,7 @@ beforeEach(function(done) {
 
 describe('RequestDispatcher', function () {
   describe('dispatch', function () {
-    it('クライアントに対するpingが返ってくる', function (done) {
+    it('接続中のクライアントに有効なリクエストを送るとresponseが返ってくる。', function (done) {
       var users = ['UID-READONLY-USER-A'];
       var testFunction = function(clients, next) {
         var socket = socketIO.socket(users[0]);
@@ -29,6 +29,10 @@ describe('RequestDispatcher', function () {
       }
 
       ClientHelper.doTestWithUsers(socketIO, users, testFunction, done);
+    });
+
+    it('接続中のクライアントに無効なリクエストを送るとNoResponseErrorがthrowされる。', function (done) {
+      done();
     });
   });
 });
