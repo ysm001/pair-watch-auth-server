@@ -35,22 +35,4 @@ PermissionSchema.static('findByName', function (name) {
   return promiseQuery(this.findOne({name: name}));
 });
 
-/**
- * DB内の全てのPermissionを取得するメソッド (デバッグ用)
- *
- * @method findAll
- * @param {[Function]} callback 返ってきたPermissionを受け取るコールバック
- */
-PermissionSchema.static('findAll', function () {
-  return promiseQuery(this.find({})).then(function(permissions) {
-    const results = {};
-
-    permissions.forEach(function(permission) {
-      results[permission.name] = permission;
-    });
-
-    return results;
-  });
-});
-
 module.exports = mongoose.model('Permission', PermissionSchema);

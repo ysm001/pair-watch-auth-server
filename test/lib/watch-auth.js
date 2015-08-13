@@ -1,5 +1,6 @@
 var assert = require('assert');
 var ServerHelper = require('../support/server-helper.js');
+var UserHelper = require('../support/user-helper.js');
 var SocketIO = require('../../lib/socket-io.js');
 var WatchAuth = require('../../models/watch-auth.js');
 var ClientHelper = require('../support/client-helper.js');
@@ -9,11 +10,13 @@ const PermissionError = require('../../lib/errors/permission-error.js')
 
 var socketIO;
 var watchAuth;
-before(function() {
+before(function(done) {
   LoggerHelper.setLevel('info');
   ServerHelper.init();
   watchAuth = new WatchAuth(ServerHelper.io);
   socketIO = watchAuth.socketIO();
+
+  UserHelper.init(done)
 });
 
 beforeEach(function(done) {
@@ -37,7 +40,7 @@ describe('WatchAuth', function () {
     });
 
     it('未接続のユーザの認証は成功しない', function (done) {
-      var id = 'DUMMYUID-ADMN-USER-0000-00000000000A';
+      var id = UserHelper.getUser('admin-user-A').deviceId;
       var permission = 'ACCESS';
 
       watchAuth.auth(id, permission, 100).then(function() {}).catch(function(err) {
@@ -48,7 +51,7 @@ describe('WatchAuth', function () {
     });
 
     it('要求された権限を持つユーザの認証は成功する', function (done) {
-      var id = 'DUMMYUID-ADMN-USER-0000-00000000000A';
+      var id = UserHelper.getUser('admin-user-A').deviceId;
       var users = [id];
 
       var permission = 'ACCESS';
@@ -62,7 +65,7 @@ describe('WatchAuth', function () {
     });
 
     it('要求された権限を持たないユーザの認証は失敗し、権限を持つユーザ情報が返される', function (done) {
-      var id = 'DUMMYUID-0000-USER-0000-00000000000A';
+      var id = UserHelper.getUser('user-A').deviceId;
       var users = [id];
       var permission = 'EXEC_ROOT_COMMAND';
 

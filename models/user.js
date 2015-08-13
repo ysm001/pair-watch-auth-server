@@ -18,6 +18,9 @@ const UserSchema = new mongoose.Schema({
   role: {type: mongoose.Schema.ObjectId, ref: 'Role'}
 });
 
+UserSchema.static('findByPermission', function(permission) {
+  return this.model('User').findByPermissions([permission]);
+});
 
 /**
  * 指定したpermissionを満たす権限を持つUserを検索するメソッド
@@ -33,10 +36,6 @@ UserSchema.static('findByPermissions', function(permissions) {
   }.bind(this));
 });
 
-UserSchema.static('findByPermission', function(permission) {
-  return this.model('User').findByPermissions([permission]);
-});
-
 UserSchema.static('findByDeviceId', function(deviceId) {
   return promiseQuery(this.findOne({deviceId: deviceId}));
 });
@@ -45,6 +44,10 @@ UserSchema.static('findByDeviceIds', function(deviceIds) {
   const condition = deviceIds.map(function(id) {return {deviceId: id};});
   return promiseQuery(this.find({$or: condition}));
 });
+
+UserSchema.static('findByName', function(name) {
+  return promiseQuery(this.findOne({name: name}));
+})
 
 /**
  * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
