@@ -12,7 +12,11 @@ module.exports = (function() {
   }
 
   PermissionHelper.getPermissions = function(names) {
-    return names.map(function(name) {return PermissionHelper.permissions[name]});
+    return names.map(function(name) {return PermissionHelper.getPermission(name)});
+  }
+
+  PermissionHelper.getPermission = function(name) {
+    return PermissionHelper.permissions[name];
   }
 
   return PermissionHelper

@@ -6,6 +6,9 @@ const Permission = require('./permission.js');
 const async = require('async');
 const PairingChecker = require('../lib/pairing-checker.js');
 const DistanceChecker = require('../lib/distance-checker.js');
+const SocketNotConnectedError = require('../lib/errors/socket-not-connected-error.js')
+const PermissionError = require('../lib/errors/permission-error.js')
+const PermissionHoldersNotFoundError = require('../lib/errors/permission-holders-not-found-error.js')
 
 let _socketIO = null;
 
@@ -29,16 +32,20 @@ const WatchAuth = function(io) {
  * @param {Function} callback コールバック
  * @param {Integer} timeout レスポンス待機時間
  */
-WatchAuth.prototype.auth = function(id, permission, timeout) {
+WatchAuth.prototype.auth = function(id, permissionName, timeout) {
   const socket = _socketIO.socket(id);
   if (!socket) {
-    return Promise.reject(Error(id + ' is not connected'));
+    return Promise.reject(new SocketNotConnectedError(id));
   }
 
-  return _checkPermission(id, permission).then(function(hasPermission) {
-    return [hasPermission, User.findByPermission(permission)]
-  }).then(function(hasPermission, requiredUsers) {
+  return Permission.findByName(permissionName).then(function(permission) {
+    return [_checkPermission(id, permissionName), User.findByPermission(permission)];
+  }).spread(function(hasPermission, requiredUsers) {
     return _checkAccessibility(socket, hasPermission, requiredUsers, timeout)
+  }).then(function(result) {
+    return Promise.resolve(result);
+  }).catch(PermissionHoldersNotFoundError, function(err) {
+    return Promise.reject(new PermissionError(id, permissionName, err.permissionHolders));
   });
 };
 
@@ -51,8 +58,7 @@ const _checkAccessibility = function(socket, hasPermission, requiredUsers, timeo
 
       return promise.then(function(nearPermissionHolders) {
         return {
-          accessibility: permissionHolders.length != 0,
-          requiredUsers: requiredUsers,
+          accessibility: nearPermissionHolders.length != 0,
           nearPermissionHolders: nearPermissionHolders
         };
       });

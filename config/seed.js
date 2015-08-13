@@ -19,32 +19,32 @@ db.roles.insert([
 db.users.insert([
   {
     name: 'admin-user-A',
-    deviceId: 'UID-ADMIN-USER-A',
+    deviceId: 'DUMMYUID-ADMN-USER-0000-00000000000A',
     role: db.roles.findOne({name: 'admin'})._id
   },
   {
     name: 'admin-user-B',
-    deviceId: 'UID-ADMIN-USER-B',
+    deviceId: 'DUMMYUID-ADMN-USER-0000-00000000000B',
     role: db.roles.findOne({name: 'admin'})._id
   },
   {
     name: 'user-A',
-    deviceId: 'UID-USER-A',
+    deviceId: 'DUMMYUID-0000-USER-0000-00000000000A',
     role: db.roles.findOne({name: 'user'})._id
   },
   {
     name: 'user-B',
-    deviceId: 'UID-USER-B',
+    deviceId: 'DUMMYUID-0000-USER-0000-00000000000B',
     role: db.roles.findOne({name: 'user'})._id
   },
   {
     name: 'readonly-user-A',
-    deviceId: 'UID-READONLY-USER-A',
+    deviceId: 'DUMMYUID-READ-USER-0000-00000000000A',
     role: db.roles.findOne({name: 'readonly-user'})._id
   },
   {
     name: 'readonly-user-B',
-    deviceId: 'UID-READONLY-USER-B',
+    deviceId: 'DUMMYUID-READ-USER-0000-00000000000B',
     role: db.roles.findOne({name: 'readonly-user'})._id
   },
   {
@@ -63,7 +63,7 @@ db.users.insert([
     role: db.roles.findOne({name: 'admin'})._id
   },
   {
-    name: 'user-C',
+    name: 'readonly-user-C',
     deviceId: 'AAAAAAAA-BBBB-AAAA-AAAA-AAAAAAAAAAAA',
     role: db.roles.findOne({name: 'readonly-user'})._id
   },

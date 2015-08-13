@@ -3,7 +3,8 @@
 const mongoose = require('mongoose');
 const Role = require('./role.js');
 const promiseQuery = require('../lib/promise-query.js');
-const Promise = require('bluebird')
+const Promise = require('bluebird');
+const RecordNotFoundError = require('../lib/errors/record-not-found-error.js');
 
 /**
  * User Model
@@ -41,10 +42,6 @@ UserSchema.static('findByDeviceId', function(deviceId) {
 });
 
 UserSchema.static('findByDeviceIds', function(deviceIds) {
-  if (deviceIds.length === 0) {
-    return Promise.reject(Error('user not found'));
-  }
-
   const condition = deviceIds.map(function(id) {return {deviceId: id};});
   return promiseQuery(this.find({$or: condition}));
 });
@@ -70,7 +67,7 @@ UserSchema.method('hasEnoughPermissions', function(permissions) {
  * @param {Function} callback callback
  */
 UserSchema.method('hasEnoughPermission', function(permission, callback) {
-  this.hasEnoughPermissions([permission], callback);
+  return this.hasEnoughPermissions([permission], callback);
 });
 
 module.exports = mongoose.model('User', UserSchema);
