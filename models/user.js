@@ -73,4 +73,11 @@ UserSchema.method('hasEnoughPermission', function(permission, callback) {
   return this.hasEnoughPermissions([permission], callback);
 });
 
+UserSchema.method('toSimpleFormat', function() {
+  return {
+    name: this.name,
+    deviceId: this.deviceId
+  };
+});
+
 module.exports = mongoose.model('User', UserSchema);

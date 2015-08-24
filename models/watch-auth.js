@@ -45,9 +45,17 @@ WatchAuth.prototype.auth = function(id, permissionName, timeout) {
   }).then(function(result) {
     return Promise.resolve(result);
   }).catch(PermissionHoldersNotFoundError, function(err) {
-    return Promise.reject(new PermissionError(id, permissionName, err.data.permissionHolders));
+    return _throwPermissionError(id, permissionName, err.data.permissionHolders);
   });
 };
+
+const _throwPermissionError = function(id, permissionName, permissionHolders) {
+  const requiredUsers = permissionHolders.map(function(user) {return user.toSimpleFormat();});
+
+  return User.findByDeviceId(id).then(function(user) {
+    return Promise.reject(new PermissionError(user.toSimpleFormat(), permissionName, requiredUsers));
+  });
+}
 
 const _checkAccessibility = function(socket, hasPermission, requiredUsers, timeout) {
   return PairingChecker.check(socket, timeout).then(function(result) {
