@@ -48,8 +48,8 @@ describe('User', function () {
     it('存在しないDeviceIDを指定した場合、RecordNotFoundErrorが投げられる', function(done) {
       var deviceId = 'not-existing-id';
       User.findByDeviceId(deviceId).then(function() {}).catch(RecordNotFoundError, function(err) {
-        assert.equal(err.modelName, 'User');
-        assert.equal(JSON.stringify(err.condition), JSON.stringify({'deviceId': deviceId}));
+        assert.equal(err.data.modelName, 'User');
+        assert.equal(JSON.stringify(err.data.condition), JSON.stringify({'deviceId': deviceId}));
         done();
       }).catch(function(err) {done(err);});
     });

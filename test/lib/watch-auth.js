@@ -32,8 +32,8 @@ describe('WatchAuth', function () {
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
         watchAuth.auth(id, permission, 100).catch(function(err) {
-          assert.equal(err.modelName, 'User');
-          assert.equal(JSON.stringify(err.condition), JSON.stringify({'deviceId': id}));
+          assert.equal(err.data.modelName, 'User');
+          assert.equal(JSON.stringify(err.data.condition), JSON.stringify({'deviceId': id}));
           next();
         }).catch(function(err) {next(err)});
       }, done);
@@ -44,7 +44,7 @@ describe('WatchAuth', function () {
       var permission = 'ACCESS';
 
       watchAuth.auth(id, permission, 100).then(function() {}).catch(function(err) {
-        assert.equal(err.id, id);
+        assert.equal(err.data.id, id);
         assert.equal(err.message, id + ' is not connected.');
         done();
       }).catch(function(err) {done(err)});
@@ -71,7 +71,7 @@ describe('WatchAuth', function () {
 
       ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
         watchAuth.auth(id, permission, 100).then(function() {}).catch(PermissionError, function(err) {
-          assert.equal(err.requiredUsers.length, 5);
+          assert.equal(err.data.requiredUsers.length, 5);
           next();
         }).catch(function(err) {next(err)});
       }, done);

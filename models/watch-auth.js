@@ -45,7 +45,7 @@ WatchAuth.prototype.auth = function(id, permissionName, timeout) {
   }).then(function(result) {
     return Promise.resolve(result);
   }).catch(PermissionHoldersNotFoundError, function(err) {
-    return Promise.reject(new PermissionError(id, permissionName, err.permissionHolders));
+    return Promise.reject(new PermissionError(id, permissionName, err.data.permissionHolders));
   });
 };
 
