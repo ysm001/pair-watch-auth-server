@@ -29,9 +29,9 @@ var generateResponse = function(token, value) {
 
 var generateDistanceResponse = function(token, target, distance) {
   return generateResponse(token, {
-    id: uid,
+    'source-id': uid,
     'target-id': target,
-    value: distance
+    distance: distance
   });
 }
 

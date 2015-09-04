@@ -76,5 +76,5 @@ db.users.insert([
     name: 'iphone-simulator',
     deviceId: 'E4D5CE7F-0F20-4FA3-B0BB-2A638ECB971F',
     role: db.roles.findOne({name: 'user'})._id
-  },
+  }
 ]);
