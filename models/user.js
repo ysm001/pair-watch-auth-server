@@ -1,62 +1,83 @@
-module.exports = (function() {
-  var mongoose = require('mongoose');
-  var Role = require('./role.js');
+'use strict';
 
-  /**
-   * User Model
-   *
-   * @class UserSchema
-   * @constructor
-   */
-  var UserSchema = new mongoose.Schema({
-    name: {type: String},
-    deviceId: {type: String, unique: true},
-    role: {type: mongoose.Schema.ObjectId, ref: 'Role'}
-  });
-  
+const mongoose = require('mongoose');
+const Role = require('./role.js');
+const promiseQuery = require('../lib/promise-query.js');
+const Promise = require('bluebird');
+const RecordNotFoundError = require('../lib/errors/record-not-found-error.js');
 
-  /**
-   * 指定したpermissionを満たす権限を持つUserを検索するメソッド
-   *
-   * @method findByPermissions
-   * @param {[Permission]} permissions permissionの配列
-   * @param {Function} callback callback
-   */
-  UserSchema.static('findByPermissions', function(permissions, callback) {
-    var self = this;
+/**
+ * User Model
+ *
+ * @class UserSchema
+ * @constructor
+ */
+const UserSchema = new mongoose.Schema({
+  name: {type: String},
+  deviceId: {type: String, unique: true},
+  role: {type: mongoose.Schema.ObjectId, ref: 'Role'}
+});
 
-    Role.findByPermissions(permissions, function(err, roles) {
-      var roleIds = roles.map(function(role) {return role._id});
-      self.find({role: {$in: roleIds}}, callback);
-    });
-  });
+UserSchema.static('findByPermission', function(permission) {
+  return this.model('User').findByPermissions([permission]);
+});
 
-  /**
-   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
-   *
-   * @method hasEnoughPermissions
-   * @param {[Permission]} permissions permissionの配列
-   * @param {Function} callback callback
-   */
-  UserSchema.method('hasEnoughPermissions', function(permissions, callback) {
-    var self = this;
+/**
+ * 指定したpermissionを満たす権限を持つUserを検索するメソッド
+ *
+ * @method findByPermissions
+ * @param {[Permission]} permissions permissionの配列
+ * @param {Function} callback callback
+ */
+UserSchema.static('findByPermissions', function(permissions) {
+  return Role.findByPermissions(permissions).then(function(roles) {
+    const roleIds = roles.map(function(role) {return role.id;});
+    return promiseQuery(this.find({role: {$in: roleIds}}));
+  }.bind(this));
+});
 
-    this.model('User').findByPermissions(permissions, function(err, users) {
-      var result = users.some(function(user) {return user._id.equals(self._id)});
-      callback(err, result, users);
-    });
-  });
+UserSchema.static('findByDeviceId', function(deviceId) {
+  return promiseQuery(this.findOne({deviceId: deviceId}));
+});
 
-  /**
-   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)
-   *
-   * @method hasEnoughPermission
-   * @param {Permission} permissions permission
-   * @param {Function} callback callback
-   */
-  UserSchema.method('hasEnoughPermission', function(permission, callback) {
-    this.hasEnoughPermissions([permission], callback);
-  });
+UserSchema.static('findByDeviceIds', function(deviceIds) {
+  const condition = deviceIds.map(function(id) {return {deviceId: id};});
+  return promiseQuery(this.find({$or: condition}));
+});
 
-  return mongoose.model('User', UserSchema);
-}) ();
+UserSchema.static('findByName', function(name) {
+  return promiseQuery(this.findOne({name: name}));
+})
+
+/**
+ * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
+ *
+ * @method hasEnoughPermissions
+ * @param {[Permission]} permissions permissionの配列
+ * @param {Function} callback callback
+ */
+UserSchema.method('hasEnoughPermissions', function(permissions) {
+  return this.model('User').findByPermissions(permissions).then(function(users) {
+    return users.some(function(user) {return user.id === this.id;}.bind(this));
+  }.bind(this));
+});
+
+/**
+ * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)
+ *
+ * @method hasEnoughPermission
+ * @param {Permission} permissions permission
+ * @param {Function} callback callback
+ */
+UserSchema.method('hasEnoughPermission', function(permission, callback) {
+  return this.hasEnoughPermissions([permission], callback);
+});
+
+UserSchema.method('toSimpleFormat', function() {
+  return {
+    name: this.name,
+    deviceId: this.deviceId
+  };
+});
+
+module.exports = mongoose.model('User', UserSchema);

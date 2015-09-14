@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('watch-auth-server:server');
 var http = require('http');
 var config = require('../config/server.json').development;
+var logger = require('../lib/logger.js')
 
 /**
  * Get port from environment and store in Express.
@@ -89,5 +90,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  logger.info('Listening on ' + bind);
 }

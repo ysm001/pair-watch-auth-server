@@ -1,5 +1,6 @@
 module.exports = (function() {
   var spawn = require('child_process').spawn;
+  var pipes = {}
 
   var ClientHelper = function() {};
 
@@ -8,23 +9,27 @@ module.exports = (function() {
 
     var client = spawn('node', [file, name, 1]);
     client.stdout.on('data', function (data) {
-        // console.log(name + ': ' + data);
+      // console.log(name + ': ' + data);
     });
 
     client.stderr.on('data', function (data) {
-        console.log(name + ': ' + data);
+      pipes[name] = pipes[name] || [];
+      pipes[name].push(String(data).replace(/[\n\r]/g,""));
+      // console.log(name + ': ' + data);
     });
 
     return client;
   };
 
-  ClientHelper.doTestWithUsers = function(socketIO, users, testFunction, done) {
+  ClientHelper.doTestWithUsers = function(socketIO, users, testFunction, done, after) {
     var clients = users.map(function(user) {return ClientHelper.spawn(user)});
+    ClientHelper._clearPipe();
 
     ClientHelper._waitForConnect(socketIO, users, function() {
-      testFunction(clients, function() {
+      testFunction(clients, function(err) {
         clients.forEach(function(client) {client.kill();});
-        done();
+        if (after) after(pipes);
+        done(err);
       });
     });
   };
@@ -42,6 +47,10 @@ module.exports = (function() {
       var socket = socketIO.socket(user);
       return socket && socket.handshake.user.id == user;
     });
+  }
+
+  ClientHelper._clearPipe = function() {
+    pipes = {};
   }
 
   return ClientHelper;

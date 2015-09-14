@@ -12,7 +12,7 @@ describe('Role', function () {
   describe('findByPermissions', function () {
     it('[ACCESS]権限を持つRoleはadmin, user, readonly-user', function (done) {
       var perms = PermissionHelper.getPermissions(['ACCESS']);
-      Role.findByPermissions(perms, function(err, roles) {
+      Role.findByPermissions(perms).then(function(roles) {
         assert.equal(roles.length, 3);
         assert.equal(roles[0].name, 'admin');
         assert.equal(roles[1].name, 'user');
@@ -24,7 +24,7 @@ describe('Role', function () {
 
     it('[ACCESS, EXEC_COMMAND]権限を持つRoleはadmin, user', function (done) {
       var perms = PermissionHelper.getPermissions(['ACCESS', 'EXEC_COMMAND']);
-      Role.findByPermissions(perms, function(err, roles) {
+      Role.findByPermissions(perms).then(function(roles) {
         assert.equal(roles.length, 2);
         assert.equal(roles[0].name, 'admin');
         assert.equal(roles[1].name, 'user');
@@ -35,7 +35,7 @@ describe('Role', function () {
 
     it('[ACCESS, EXEC_COMMAND, EXEC_ROOT_COMMAND]権限を持つRoleはadmin', function (done) {
       var perms = PermissionHelper.getPermissions(['ACCESS', 'EXEC_COMMAND', 'EXEC_ROOT_COMMAND']);
-      Role.findByPermissions(perms, function(err, roles) {
+      Role.findByPermissions(perms).then(function(roles) {
         assert.equal(roles.length, 1);
         assert.equal(roles[0].name, 'admin');
 

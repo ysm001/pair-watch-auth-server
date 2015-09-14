@@ -58,19 +58,5 @@ describe('SocketIO', function () {
       }, done);
     });
   });
-
-  // describe('disconnectAll', function () {
-  //   it('切断後、socketsのサイズは0になる', function (done) {
-  //     var users = 
-  //       ['UID-READONLY-USER-A', 'UID-READONLY-USER-B',
-  //         'UID-USER-A', 'UID-USER-B', 'UID-ADMIN-USER-A'];
-
-  //     ClientHelper.doTestWithUsers(socketIO, users, function(clients, next) {
-  //       socketIO.disconnectAll();
-  //       assert.equal(socketIO.sockets().length, 0);
-  //       next();
-  //     }, done);
-  //   });
-  // });
 });
 

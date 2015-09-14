@@ -25,5 +25,9 @@ module.exports = (function() {
     }
   }
 
+  ServerHelper.port = function() {
+    return port;
+  }
+
   return ServerHelper;
 })();
