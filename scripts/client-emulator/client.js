@@ -29,9 +29,9 @@ var generateResponse = function(token, value) {
 
 var generateDistanceResponse = function(token, target, distance) {
   return generateResponse(token, {
-    id: uid,
+    'source-id': uid,
     'target-id': target,
-    value: distance
+    distance: distance
   });
 }
 
@@ -83,6 +83,10 @@ socket.on('request', function(data) {
       break;
   }
 
+});
+
+socket.on('notification', function(data) {
+  console.error(data);
 });
 
 if (!disableBeacon) {

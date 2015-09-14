@@ -22,10 +22,10 @@ describe('PairingChecker', function () {
       var users = ['UID-READONLY-USER-A'];
       var testFunction = function(clients, next) {
         var socket = socketIO.socket(users[0]);
-        PairingChecker.check(socket, function(err, response) {
-          assert.equal(response, true);
+        PairingChecker.check(socket, 100).then(function(result) {
+          assert.equal(result, true);
           next();
-        }, 100);
+        })
       }
 
       ClientHelper.doTestWithUsers(socketIO, users, testFunction, done);

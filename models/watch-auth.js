@@ -1,91 +1,95 @@
-var SocketIO = require('../lib/socket-io.js');
-var RequestDispatcher = require('../lib/request-dispatcher.js');
-var Puid = require('puid');
-var User = require('./user.js');
-var Permission = require('./permission.js');
-var async = require('async')
-var PairingChecker = require('../lib/pairing-checker.js')
-var DistanceChecker = require('../lib/distance-checker.js')
+'use strict';
 
-module.exports = (function() {
-  var _socketIO = null;
-  var _requestDispatcher = null;
+const SocketIO = require('../lib/socket-io.js');
+const User = require('./user.js');
+const Permission = require('./permission.js');
+const async = require('async');
+const PairingChecker = require('../lib/pairing-checker.js');
+const DistanceChecker = require('../lib/distance-checker.js');
+const SocketNotConnectedError = require('../lib/errors/socket-not-connected-error.js')
+const PermissionError = require('../lib/errors/permission-error.js')
+const PermissionHoldersNotFoundError = require('../lib/errors/permission-holders-not-found-error.js')
 
-  /**
-   * Apple Watchを使った認証を扱うクラス
-   *
-   * @class WatchAuth
-   * @constructor
-   */
-  var WatchAuth = function(io) {
-    _socketIO = new SocketIO(io);
+let _socketIO = null;
+
+/**
+ * Apple Watchを使った認証を扱うクラス
+ *
+ * @class WatchAuth
+ * @constructor
+ * @param {SocketIO} io SocketIOオブジェクト
+ */
+const WatchAuth = function(io) {
+  _socketIO = new SocketIO(io);
+};
+
+/**
+ * 認証を行うメソッド
+ *
+ * @method auth
+ * @param {String} id ユーザID
+ * @param {String} permission 要求している権限
+ * @param {Function} callback コールバック
+ * @param {Integer} timeout レスポンス待機時間
+ */
+WatchAuth.prototype.auth = function(id, permissionName, timeout) {
+  const socket = _socketIO.socket(id);
+  if (!socket) {
+    return Promise.reject(new SocketNotConnectedError(id));
   }
 
-  /**
-   * 認証を行うメソッド
-   *
-   * @method auth
-   * @param {String} id ユーザID
-   * @param {String} permission 要求している権限
-   * @param {Integer} timeout レスポンス待機時間
-   */
-  WatchAuth.prototype.auth = function(id, permission, callback, timeout) {
-    var sockets = _socketIO.sockets();
-    var socket = _socketIO.socket(id);
+  return Permission.findByName(permissionName).then(function(permission) {
+    return [_checkPermission(id, permissionName), User.findByPermission(permission)];
+  }).spread(function(hasPermission, requiredUsers) {
+    return _checkAccessibility(socket, hasPermission, requiredUsers, timeout)
+  }).then(function(result) {
+    return Promise.resolve(result);
+  }).catch(PermissionHoldersNotFoundError, function(err) {
+    return _throwPermissionError(id, permissionName, err.data.permissionHolders);
+  });
+};
 
-    var tasks = [
-      function(next) {
-        _checkPermission.call(this, id, permission, next);
-      },
-      function(result, requiredUsers, next) {
-        next(!socket ? id + " is not connected." : null, result, requiredUsers);
-      },
-      function(result, requiredUsers,next) {
-        _checkAccessibility(socket, result, requiredUsers, next, timeout);
-      }
-    ];
+const _throwPermissionError = function(id, permissionName, permissionHolders) {
+  const requiredUsers = permissionHolders.map(function(user) {return user.toSimpleFormat();});
 
-    async.waterfall(tasks, function(err, result, requiredUsers, nearPermissionHolders) {
-      callback(err, result && !err, requiredUsers, nearPermissionHolders);
-    });
-  }
+  return User.findByDeviceId(id).then(function(user) {
+    return Promise.reject(new PermissionError(user.toSimpleFormat(), permissionName, requiredUsers));
+  });
+}
 
-  var _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
-    var tasks = [
-      function(next) {
-        PairingChecker.check(socket, next, timeout);
-      },
-      function(result, next) {
-        next(!result ? "pairing check is failed." : null, result);
-      },
-      function(result, next) {
-        if (hasPermission) next(null, true);
-        else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
-      }
-    ];
+const _checkAccessibility = function(socket, hasPermission, requiredUsers, timeout) {
+  return PairingChecker.check(socket, timeout).then(function(result) {
+    if (hasPermission) {
+      return {accessibility: true};
+    } else {
+      const promise = DistanceChecker.findNearPermissionHolders(socket, requiredUsers, timeout)
 
-    async.waterfall(tasks , function(err, result, nearPermissionHolders) {
-      callback(err, result, requiredUsers, nearPermissionHolders);
-    });
-  }
-
-  var _checkPermission = function(id, permission, callback) {
-    Permission.findOne({name: permission}, function(err, permission) {
-      User.findOne({deviceId: id}, function(err, user) {
-        if (err || !user) callback(err || id + ' is not valid user.', false);
-        else user.hasEnoughPermission(permission, callback);
+      return promise.then(function(nearPermissionHolders) {
+        return {
+          accessibility: nearPermissionHolders.length != 0,
+          nearPermissionHolders: nearPermissionHolders
+        };
       });
-    });
-  }
-  /**
-   * SocketIOオブジェクトを返すメソッド (デバッグ用)
-   *
-   * @method socketIO
-   * @return {SocketIO} SocketIOオブジェクト
-   */
-  WatchAuth.prototype.socketIO = function() {
-    return _socketIO;
-  }
+    }
+  });
+};
 
-  return WatchAuth;
-})();
+const _checkPermission = function(id, permissionName) {
+  return User.findByDeviceId(id).then(function(user) {
+    return [user, Permission.findByName(permissionName)];
+  }).spread(function(user, permission) {
+    return user.hasEnoughPermission(permission);
+  });
+};
+
+/**
+ * SocketIOオブジェクトを返すメソッド (デバッグ用)
+ *
+ * @method socketIO
+ * @return {SocketIO} SocketIOオブジェクト
+ */
+WatchAuth.prototype.socketIO = function() {
+  return _socketIO;
+};
+
+module.exports = WatchAuth;
