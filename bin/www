@@ -5,10 +5,11 @@
  */
 
 var app = require('../app');
+var db = require('./lib/supports/db.js');
 var debug = require('debug')('watch-auth-server:server');
 var http = require('http');
 var config = require('../config/server.json').development;
-var logger = require('../lib/logger.js')
+var logger = require('../lib/supports/logger.js')
 
 /**
  * Get port from environment and store in Express.

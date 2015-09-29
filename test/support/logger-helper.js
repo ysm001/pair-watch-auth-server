@@ -1,5 +1,5 @@
 module.exports = (function() {
-  var logger = require('../../lib/logger.js');
+  var logger = require('../../lib/supports/logger.js');
   var LoggerHelper = function() {}
 
   LoggerHelper.setLevel = function(level) {

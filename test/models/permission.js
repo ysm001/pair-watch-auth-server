@@ -1,4 +1,4 @@
-var db = require('../../lib/db.js');
+var db = require('../support/db.js');
 var assert = require('assert');
 var Permission = require('../../models/permission.js');
 var PermissionHelper = require('../support/permission-helper.js');

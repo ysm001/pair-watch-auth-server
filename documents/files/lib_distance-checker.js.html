@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -87,85 +97,104 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-var async = require(&#x27;async&#x27;)
-var lodash = require(&#x27;lodash&#x27;);
-var RequestDispatcher = require(&#x27;../lib/request-dispatcher.js&#x27;);
+&#x27;use strict&#x27;;
 
-module.exports = (function() {
-  /**
-   * iOSアプリ間の距離を扱うクラス
-   *
-   * (サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)
-   *
-   * @class DistanceChecker
-   * @constructor
-   */
-  var DistanceChecker = function() {}
+const lodash = require(&#x27;lodash&#x27;);
+const RequestDispatcher = require(&#x27;../lib/request-dispatcher.js&#x27;);
+const User = require(&#x27;../models/user.js&#x27;);
+const PermissionHoldersNotFoundError = require(&#x27;./errors/permission-holders-not-found-error.js&#x27;);
+const AuthConfig = require(&#x27;../config/auth.json&#x27;);
+const Promise = require(&#x27;bluebird&#x27;);
+const _logger = require(&#x27;./supports/logger.js&#x27;);
 
-  /**
-   * 指定した権限を持つユーザが近くにいるかを確認するメソッド
-   *
-   * @method checkPermissionHoldersAreNear
-   * @static
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  DistanceChecker.checkPermissionHoldersAreNear = function(socket, permissionHolders, callback, timeout) {
-    _findNearPermissionHolders(socket, permissionHolders, function(err, result) {
-      callback(err, result.length != 0);
-    }, timeout);
+/**
+ * iOSアプリ間の距離を扱うクラス
+ *
+ * (サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)
+ *
+ * @class DistanceChecker
+ * @constructor
+ */
+const DistanceChecker = function() {};
+
+/**
+ * 近くにいる権限を持つユーザを探すメソッド
+ *
+ * @method findNearPermissionHolders
+ * @private
+ * @param {Socket} socket 確認先socket
+ * @param {[User]} permissionHolders 権限を持つユーザ
+ * @param {Integer} timeout レスポンス待機時間
+ * @returns {Promise} this
+ */
+DistanceChecker.findNearPermissionHolders = function(socket, permissionHolders, timeout) {
+  const permissionHolderIds = permissionHolders.map(function(holder) {return holder.deviceId;});
+
+  return _emitDistanceRequest(socket, timeout).then(function(distances) {
+    const nearPermissionHolderIds = _findNearPermissionHolderIds(socket, distances, permissionHolderIds);
+
+    _logger.debug(distances);
+
+    if (nearPermissionHolderIds.length === 0) {
+      return Promise.reject(new PermissionHoldersNotFoundError(permissionHolders));
+    }
+
+    return User.findByDeviceIds(nearPermissionHolderIds);
+  });
+};
+
+const _findNearPermissionHolderIds = function(socket, distances, permissionHolderIds) {
+  const nearUserIds = _getNearUserIdsFromDistances(socket.handshake.user.id, distances);
+
+  _logger.debug(nearUserIds);
+  return lodash.intersection(nearUserIds, permissionHolderIds);
+};
+
+const _getNearUserIdsFromDistances = function(userId, distances) {
+  const nearDistances = distances.filter(function(distance) {return _isValidDistance(distance.distance);});
+
+  console.log(nearDistances)
+  return nearDistances.map(function(distance) {
+    if (distance[&#x27;source-id&#x27;] === userId) {
+      return distance[&#x27;target-id&#x27;];
+    } else if (distance[&#x27;target-id&#x27;] === userId) {
+      return distance[&#x27;source-id&#x27;];
+    }
+
+    return null;
+  });
+};
+
+const _isValidDistance = function(distance) {
+  const distances = {
+    far: 0,
+    near: 1,
+    immediate: 2
+  };
+
+  console.log(distances[distance]);
+  console.log(distances[AuthConfig.distance]);
+  if (!(distance in distances)) {
+    throw new Error(&quot;Invalid distance value is set. Check your config/auth.json. Please set &#x27;immediate&#x27; or &#x27;near&#x27; or &#x27;far&#x27; to distance.&quot;);
   }
 
-  /**
-   * 近くにいる権限を持つユーザを探すメソッド
-   *
-   * @method _findNearPermissionHolders
-   * @private
-   * @param {Socket} socket 確認先socket
-   * @param {[User]} permissionHolders 権限を持つユーザ
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  _findNearPermissionHolders = function(socket, permissionHolders, callback, timeout) {
-    permissionHolderIds = permissionHolders.map(function(holder) {return holder.deviceId});
+  return distances[distance] &gt;= distances[AuthConfig.distance];
+}
 
-    var tasks = [
-      function(next) {
-        _emitDistanceRequest(socket, next, timeout);
-      },
-      function(distances, next) {
-        var nearUserIds = distances.
-          filter(function(distance) {return distance.value == &#x27;immediate&#x27; }).
-          map(function(distance) {return distance[&#x27;target-id&#x27;]});
+/**
+ * 距離計測のリクエストを送るメソッド
+ *
+ * @method _emitDistanceRequest
+ * @private
+ * @param {Socket} socket 送信先socket
+ * @param {Integer} timeout レスポンス待機時間
+ * @returns {Promise} this
+ */
+const _emitDistanceRequest = function(socket, timeout) {
+  return RequestDispatcher.dispatch(socket, &#x27;distance&#x27;, timeout);
+};
 
-        var nearPermissionHolderIds = lodash.intersection(nearUserIds, permissionHolderIds);
-
-        next(null, nearPermissionHolderIds);
-      }
-    ];
-
-    async.waterfall(tasks, callback);
-  }
-
-  /**
-   * 距離計測のリクエストを送るメソッド
-   *
-   * @method _emitDistanceRequest
-   * @private
-   * @param {Socket} socket 送信先socket
-   * @param {Function} callback 結果を受け取るcallback
-   * @param {Integer} timeout レスポンス待機時間 
-   */
-  var _emitDistanceRequest = function(socket, callback, timeout) {
-    RequestDispatcher.dispatch(socket, &#x27;distance&#x27;, function(response) {
-      callback(null, response);
-    }, timeout, 11111/* debug */);
-  }
-  
-  return DistanceChecker;
-})();
+module.exports = DistanceChecker;
 
     </pre>
 </div>

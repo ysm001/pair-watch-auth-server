@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -87,55 +97,44 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-module.exports = (function() {
-  var mongoose = require(&#x27;mongoose&#x27;);
-  var lodash = require(&#x27;lodash&#x27;);
+&#x27;use strict&#x27;;
 
-  /**
-   * Permission Model
-   *
-   * @class PermissionSchema
-   * @constructor
-   */
-  var PermissionSchema = new mongoose.Schema({
-    name: {type: String, unique: true},
-    flag: {type: Number, unique: true}
-  });
+const mongoose = require(&#x27;mongoose&#x27;);
+const lodash = require(&#x27;lodash&#x27;);
+const promiseQuery = require(&#x27;../lib/supports/promise-query.js&#x27;);
+const Promise = require(&#x27;bluebird&#x27;)
 
-  /**
-   * 指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド
-   *
-   * @method hasEnoughPermissions
-   * @param {[Permission]} permissions permissionの配列
-   * @param {[Permission]} requiredPermissions 要求されるpermissionの配列
-   * @return {[Boolean]} permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse
-   */
-  PermissionSchema.static(&#x27;hasEnoughPermissions&#x27;, function(permissions, requiredPermissions) {
-    permissionNames = permissions.map(function(permission) {return permission.name;});
-    requiredPermissionNames = requiredPermissions.map(function(permission) {return permission.name;});
+/**
+ * Permission Model
+ *
+ * @class PermissionSchema
+ * @constructor
+ */
+const PermissionSchema = new mongoose.Schema({
+  name: {type: String, unique: true},
+  flag: {type: Number, unique: true}
+});
 
-    return lodash.difference(requiredPermissionNames, permissionNames).length == 0;
-  })
+/**
+ * 指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド
+ *
+ * @method hasEnoughPermissions
+ * @param {[Permission]} permissions permissionの配列
+ * @param {[Permission]} requiredPermissions 要求されるpermissionの配列
+ * @return {[Boolean]} permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse
+ */
+PermissionSchema.static(&#x27;hasEnoughPermissions&#x27;, function(permissions, requiredPermissions) {
+  const permissionNames = permissions.map(function(permission) {return permission.name;});
+  const requiredPermissionNames = requiredPermissions.map(function(permission) {return permission.name;});
 
-  /**
-   * DB内の全てのPermissionを取得するメソッド (デバッグ用)
-   *
-   * @method findAll
-   * @param {[Function]} callback 返ってきたPermissionを受け取るコールバック
-   */
-  PermissionSchema.static(&#x27;findAll&#x27;, function(callback) {
-    this.find({}, function(err, permissions) {
-      var results = {};
-      permissions.forEach(function(permission) {
-        results[permission.name] = permission
-      });
+  return lodash.difference(requiredPermissionNames, permissionNames).length === 0;
+});
 
-      callback(results);
-    });
-  });
+PermissionSchema.static(&#x27;findByName&#x27;, function (name) {
+  return promiseQuery(this.findOne({name: name}));
+});
 
-  return mongoose.model(&#x27;Permission&#x27;, PermissionSchema);
-}) ();
+module.exports = mongoose.model(&#x27;Permission&#x27;, PermissionSchema);
 
     </pre>
 </div>

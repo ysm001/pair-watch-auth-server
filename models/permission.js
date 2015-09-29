@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const lodash = require('lodash');
-const promiseQuery = require('../lib/promise-query.js');
+const promiseQuery = require('../lib/supports/promise-query.js');
 const Promise = require('bluebird')
 
 /**

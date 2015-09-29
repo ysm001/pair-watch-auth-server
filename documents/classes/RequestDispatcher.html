@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -88,7 +98,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/lib_request-dispatcher.js.html#l7"><code>lib&#x2F;request-dispatcher.js:7</code></a>
+            Defined in: <a href="../files/lib_request-dispatcher.js.html#l11"><code>lib&#x2F;request-dispatcher.js:11</code></a>
         </div>
 
 
@@ -117,7 +127,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_request-dispatcher.js.html#l7"><code>lib&#x2F;request-dispatcher.js:7</code></a>
+        <a href="../files/lib_request-dispatcher.js.html#l11"><code>lib&#x2F;request-dispatcher.js:11</code></a>
         </p>
 
 
@@ -158,6 +168,16 @@
 
                                     <span class="flag static">static</span>
                             </li>
+                            <li class="index-item method">
+                                <a href="#method_receiveHttpResponse">receiveHttpResponse</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_register">register</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
                     </ul>
                 </div>
 
@@ -179,6 +199,9 @@
             </ul><span class="paren">)</span>
         </div>
 
+        <span class="returns-inline">
+            <span class="type">Void</span>
+        </span>
 
 
         <span class="flag private">private</span>
@@ -190,7 +213,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_request-dispatcher.js.html#l45"><code>lib&#x2F;request-dispatcher.js:45</code></a>
+        <a href="../files/lib_request-dispatcher.js.html#l72"><code>lib&#x2F;request-dispatcher.js:72</code></a>
         </p>
 
 
@@ -220,6 +243,13 @@
             </ul>
         </div>
 
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Void</span>:
+            </div>
+        </div>
 
 
 </div>
@@ -235,17 +265,14 @@
                         <code>request</code>
                 </li>
                 <li class="arg">
-                        <code>callback</code>
-                </li>
-                <li class="arg">
                         <code>timeout</code>
-                </li>
-                <li class="arg">
-                        <code>constToken</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
 
+        <span class="returns-inline">
+            <span class="type">Void</span>
+        </span>
 
 
 
@@ -257,7 +284,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_request-dispatcher.js.html#l15"><code>lib&#x2F;request-dispatcher.js:15</code></a>
+        <a href="../files/lib_request-dispatcher.js.html#l19"><code>lib&#x2F;request-dispatcher.js:19</code></a>
         </p>
 
 
@@ -297,17 +324,6 @@
 
                 </li>
                 <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>結果を受け取るcallback</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
                         <code class="param-name">timeout</code>
                         <span class="type">Integer</span>
 
@@ -318,13 +334,67 @@
                     </div>
 
                 </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Void</span>:
+            </div>
+        </div>
+
+
+</div>
+<div id="method_receiveHttpResponse" class="method item">
+    <h3 class="name"><code>receiveHttpResponse</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>res</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">Void</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/lib_request-dispatcher.js.html#l60"><code>lib&#x2F;request-dispatcher.js:60</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>HTTPリクエストをdispatchされたリクエストのレスポンスとして受け取るメソッド</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">constToken</code>
-                        <span class="type">Integer</span>
+                        <code class="param-name">res</code>
+                        <span class="type">HTTPResponse</span>
 
 
                     <div class="param-description">
-                        <p>(デバッグ用) constTokenをトークンに利用</p>
+                        <p>HTTPレスポンス</p>
 
                     </div>
 
@@ -332,6 +402,78 @@
             </ul>
         </div>
 
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Void</span>:
+            </div>
+        </div>
+
+
+</div>
+<div id="method_register" class="method item">
+    <h3 class="name"><code>register</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>socket</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">Void</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/lib_request-dispatcher.js.html#l46"><code>lib&#x2F;request-dispatcher.js:46</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>socketをRequestDispatcherに登録するメソッド</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">socket</code>
+                        <span class="type">Socket</span>
+
+
+                    <div class="param-description">
+                        <p>登録するsocket</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Void</span>:
+            </div>
+        </div>
 
 
 </div>

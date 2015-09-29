@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
-var config = require('../config/db.json')['development'];
-var db = config['host'] + '/' + config['database']
-var query = ['mongo', db, 'config/seed.js'].join(' '); 
+var isTestMode = !!process.argv[2];
+var configJSON = require('../config/db.json');
+var config = isTestMode ? configJSON.test : configJSON.development;
+var db = config.host + '/' + config.database
+var seedjs = isTestMode ? 'seed-test.js' : 'seed.js';
+var query = ['mongo', db, 'config/' + seedjs].join(' '); 
 
 var exec = require('child_process').exec
 

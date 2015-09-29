@@ -1,6 +1,6 @@
 var assert = require('assert');
 var ServerHelper = require('../support/server-helper.js');
-var SocketIO = require('../../lib/socket-io.js');
+var SocketIO = require('../../lib/supports/socket-io.js');
 var PairingChecker = require('../../lib/pairing-checker.js');
 var ClientHelper = require('../support/client-helper.js');
 var LoggerHelper = require('../support/logger-helper.js');

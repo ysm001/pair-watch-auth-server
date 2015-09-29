@@ -1,11 +1,11 @@
 # Pair Watch Security
 ---
 
-## Setup
+## 準備
 
 ```
 # リポジトリをクローン
-git clone git@github.com:ysm001/pair-watch-auth-server.git
+git clone http://10.68.226.223:8000/git/yasudar/pair-watch-security-server.git 
 
 # プロジェクトディレクトリへ移動
 cd pair-watch-auth-server
@@ -23,19 +23,33 @@ mongod --dbpath ./data/db
 npm run seed
 ```
 
-## Run
+## 実行
 
 ```
 npm start
 ```
 
-## Test
+## テスト
 
 ```
 npm test
 ```
 
-### Client Simulator (for debug)
+## 開発用データ/試験用データ投入
+
+```
+npm run seed
+npm run seed-test
+```
+
+## ドキュメント生成
+documentsディレクトリ直下にクラスドキュメントを生成 (YUIDoc形式)
+
+```
+npm run document
+```
+
+## Client Simulator (debug & test用)
 
 ```
 node scripts/client-emulator/client.js <UUID>
