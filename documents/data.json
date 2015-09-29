@@ -1,11 +1,110 @@
 {
     "project": {},
     "files": {
+        "lib/errors/invalid-token-error.js": {
+            "name": "lib/errors/invalid-token-error.js",
+            "modules": {},
+            "classes": {
+                "InvalidTokenError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/no-response-error.js": {
+            "name": "lib/errors/no-response-error.js",
+            "modules": {},
+            "classes": {
+                "NoResponseError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/pairing-check-error.js": {
+            "name": "lib/errors/pairing-check-error.js",
+            "modules": {},
+            "classes": {
+                "ParingCheckError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/permission-error.js": {
+            "name": "lib/errors/permission-error.js",
+            "modules": {},
+            "classes": {
+                "PermissionError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/permission-holders-not-found-error.js": {
+            "name": "lib/errors/permission-holders-not-found-error.js",
+            "modules": {},
+            "classes": {
+                "PermissionHoldersNotFoundError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/record-not-found-error.js": {
+            "name": "lib/errors/record-not-found-error.js",
+            "modules": {},
+            "classes": {
+                "RecordNotFoundError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/errors/socket-not-connected-error.js": {
+            "name": "lib/errors/socket-not-connected-error.js",
+            "modules": {},
+            "classes": {
+                "SocketNotConnectedError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/supports/socket-io.js": {
+            "name": "lib/supports/socket-io.js",
+            "modules": {},
+            "classes": {
+                "SocketIO": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/supports/token-generator.js": {
+            "name": "lib/supports/token-generator.js",
+            "modules": {},
+            "classes": {
+                "TokenGenerator": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/auth-result-notificator.js": {
+            "name": "lib/auth-result-notificator.js",
+            "modules": {},
+            "classes": {
+                "AuthResultNotificator": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "lib/distance-checker.js": {
             "name": "lib/distance-checker.js",
             "modules": {},
             "classes": {
                 "DistanceChecker": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/notification-dispatcher.js": {
+            "name": "lib/notification-dispatcher.js",
+            "modules": {},
+            "classes": {
+                "NotificationDispatcher": 1
             },
             "fors": {},
             "namespaces": {}
@@ -28,20 +127,11 @@
             "fors": {},
             "namespaces": {}
         },
-        "lib/socket-io.js": {
-            "name": "lib/socket-io.js",
+        "lib/watch-auth.js": {
+            "name": "lib/watch-auth.js",
             "modules": {},
             "classes": {
-                "SocketIO": 1
-            },
-            "fors": {},
-            "namespaces": {}
-        },
-        "lib/token-generator.js": {
-            "name": "lib/token-generator.js",
-            "modules": {},
-            "classes": {
-                "TokenGenerator": 1
+                "WatchAuth": 1
             },
             "fors": {},
             "namespaces": {}
@@ -72,19 +162,147 @@
             },
             "fors": {},
             "namespaces": {}
-        },
-        "models/watch-auth.js": {
-            "name": "models/watch-auth.js",
-            "modules": {},
-            "classes": {
-                "WatchAuth": 1
-            },
-            "fors": {},
-            "namespaces": {}
         }
     },
     "modules": {},
     "classes": {
+        "InvalidTokenError": {
+            "name": "InvalidTokenError",
+            "shortname": "InvalidTokenError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/invalid-token-error.js",
+            "line": 5,
+            "description": "不正なトークンを受信したことを表すエラー",
+            "is_constructor": 1
+        },
+        "NoResponseError": {
+            "name": "NoResponseError",
+            "shortname": "NoResponseError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/no-response-error.js",
+            "line": 5,
+            "description": "クライアントから返信が無かったことを表すエラー",
+            "is_constructor": 1
+        },
+        "ParingCheckError": {
+            "name": "ParingCheckError",
+            "shortname": "ParingCheckError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/pairing-check-error.js",
+            "line": 5,
+            "description": "ペアリングの確認に失敗したことを表すエラー",
+            "is_constructor": 1
+        },
+        "PermissionError": {
+            "name": "PermissionError",
+            "shortname": "PermissionError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/permission-error.js",
+            "line": 5,
+            "description": "権限認証に失敗したことを表すエラー",
+            "is_constructor": 1
+        },
+        "PermissionHoldersNotFoundError": {
+            "name": "PermissionHoldersNotFoundError",
+            "shortname": "PermissionHoldersNotFoundError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/permission-holders-not-found-error.js",
+            "line": 5,
+            "description": "権限保持者が検出できなかったことを表すエラー",
+            "is_constructor": 1
+        },
+        "RecordNotFoundError": {
+            "name": "RecordNotFoundError",
+            "shortname": "RecordNotFoundError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/record-not-found-error.js",
+            "line": 5,
+            "description": "DB上にデータが存在しなかったことを表すエラー",
+            "is_constructor": 1
+        },
+        "SocketNotConnectedError": {
+            "name": "SocketNotConnectedError",
+            "shortname": "SocketNotConnectedError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/errors/socket-not-connected-error.js",
+            "line": 5,
+            "description": "クライアントsocketが接続していないことを表すエラー",
+            "is_constructor": 1
+        },
+        "SocketIO": {
+            "name": "SocketIO",
+            "shortname": "SocketIO",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/supports/socket-io.js",
+            "line": 7,
+            "description": "socket.ioの簡易wrapperクラス",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "io",
+                    "description": "SocketIOオブジェクト",
+                    "type": "SocketIO"
+                }
+            ]
+        },
+        "TokenGenerator": {
+            "name": "TokenGenerator",
+            "shortname": "TokenGenerator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/supports/token-generator.js",
+            "line": 3,
+            "description": "トークンを生成するクラス",
+            "is_constructor": 1
+        },
+        "AuthResultNotificator": {
+            "name": "AuthResultNotificator",
+            "shortname": "AuthResultNotificator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/auth-result-notificator.js",
+            "line": 7,
+            "description": "認証結果を通知するクラス",
+            "is_constructor": 1
+        },
         "DistanceChecker": {
             "name": "DistanceChecker",
             "shortname": "DistanceChecker",
@@ -94,8 +312,21 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/distance-checker.js",
-            "line": 6,
+            "line": 11,
             "description": "iOSアプリ間の距離を扱うクラス\n\n(サーバ側からは距離計測のリクエストを送るだけで、実際に距離計測を行うのはiOSアプリ側)",
+            "is_constructor": 1
+        },
+        "NotificationDispatcher": {
+            "name": "NotificationDispatcher",
+            "shortname": "NotificationDispatcher",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "lib/notification-dispatcher.js",
+            "line": 5,
+            "description": "通知の送信を行うクラス",
             "is_constructor": 1
         },
         "PairingChecker": {
@@ -107,7 +338,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/pairing-checker.js",
-            "line": 5,
+            "line": 7,
             "description": "ペアリングの状態を確認するクラス\n\n(サーバ側からはペアリングの状態確認リクエストを送るだけで、実際にペアリングの状態を確認するのはiOSアプリ側)",
             "is_constructor": 1
         },
@@ -120,35 +351,29 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "lib/request-dispatcher.js",
-            "line": 7,
+            "line": 11,
             "description": "Clientへのリクエスト送信を行うクラス",
             "is_constructor": 1
         },
-        "SocketIO": {
-            "name": "SocketIO",
-            "shortname": "SocketIO",
+        "WatchAuth": {
+            "name": "WatchAuth",
+            "shortname": "WatchAuth",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "lib/socket-io.js",
-            "line": 4,
-            "description": "socket.ioの簡易wrapperクラス",
-            "is_constructor": 1
-        },
-        "TokenGenerator": {
-            "name": "TokenGenerator",
-            "shortname": "TokenGenerator",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "lib/token-generator.js",
-            "line": 2,
-            "description": "トークンを生成するクラス",
-            "is_constructor": 1
+            "file": "lib/watch-auth.js",
+            "line": 15,
+            "description": "Apple Watchを使った認証を扱うクラス",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "io",
+                    "description": "SocketIOオブジェクト",
+                    "type": "SocketIO"
+                }
+            ]
         },
         "PermissionSchema": {
             "name": "PermissionSchema",
@@ -159,7 +384,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "models/permission.js",
-            "line": 5,
+            "line": 8,
             "description": "Permission Model",
             "is_constructor": 1
         },
@@ -172,7 +397,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "models/role.js",
-            "line": 5,
+            "line": 7,
             "description": "Role Model",
             "is_constructor": 1
         },
@@ -185,224 +410,16 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "models/user.js",
-            "line": 5,
+            "line": 9,
             "description": "User Model",
-            "is_constructor": 1
-        },
-        "WatchAuth": {
-            "name": "WatchAuth",
-            "shortname": "WatchAuth",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "models/watch-auth.js",
-            "line": 14,
-            "description": "Apple Watchを使った認証を扱うクラス",
             "is_constructor": 1
         }
     },
+    "elements": {},
     "classitems": [
         {
-            "file": "lib/distance-checker.js",
-            "line": 16,
-            "description": "指定した権限を持つユーザが近くにいるかを確認するメソッド",
-            "itemtype": "method",
-            "name": "checkPermissionHoldersAreNear",
-            "static": 1,
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "確認先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "permissionHolders",
-                    "description": "権限を持つユーザ",
-                    "type": "[User]"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "DistanceChecker"
-        },
-        {
-            "file": "lib/distance-checker.js",
-            "line": 32,
-            "description": "近くにいる権限を持つユーザを探すメソッド",
-            "itemtype": "method",
-            "name": "_findNearPermissionHolders",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "確認先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "permissionHolders",
-                    "description": "権限を持つユーザ",
-                    "type": "[User]"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "DistanceChecker"
-        },
-        {
-            "file": "lib/distance-checker.js",
-            "line": 63,
-            "description": "距離計測のリクエストを送るメソッド",
-            "itemtype": "method",
-            "name": "_emitDistanceRequest",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "送信先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "DistanceChecker"
-        },
-        {
-            "file": "lib/pairing-checker.js",
-            "line": 15,
-            "description": "ペアリングの状態を確認するメソッド",
-            "itemtype": "method",
-            "name": "check",
-            "static": 1,
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "確認先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "PairingChecker"
-        },
-        {
-            "file": "lib/pairing-checker.js",
-            "line": 46,
-            "description": "ペアリングの状態を確認するリクエストを送るメソッド",
-            "itemtype": "method",
-            "name": "_emit",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "送信先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "PairingChecker"
-        },
-        {
-            "file": "lib/request-dispatcher.js",
-            "line": 15,
-            "description": "クライアントへのリクエスト送信を行い、結果を受け取るメソッド\n\n一定時間以内に返答された結果全てを配列としてcallbackに渡す",
-            "itemtype": "method",
-            "name": "dispatch",
-            "static": 1,
-            "params": [
-                {
-                    "name": "socket",
-                    "description": "送信先socket",
-                    "type": "Socket"
-                },
-                {
-                    "name": "request",
-                    "description": "リクエスト内容",
-                    "type": "String"
-                },
-                {
-                    "name": "callback",
-                    "description": "結果を受け取るcallback",
-                    "type": "Function"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                },
-                {
-                    "name": "constToken",
-                    "description": "(デバッグ用) constTokenをトークンに利用",
-                    "type": "Integer"
-                }
-            ],
-            "class": "RequestDispatcher"
-        },
-        {
-            "file": "lib/request-dispatcher.js",
-            "line": 45,
-            "description": "レスポンスを受け取った際に呼ばれるcallback",
-            "itemtype": "method",
-            "name": "_onReceiveResponse",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "res",
-                    "description": "レスポンス",
-                    "type": "Object"
-                }
-            ],
-            "class": "RequestDispatcher"
-        },
-        {
-            "file": "lib/socket-io.js",
-            "line": 15,
+            "file": "lib/supports/socket-io.js",
+            "line": 19,
             "description": "接続の受け入れを開始するメソッド",
             "itemtype": "method",
             "name": "startConnection",
@@ -413,11 +430,15 @@
                     "type": "Function"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 30,
+            "file": "lib/supports/socket-io.js",
+            "line": 35,
             "description": "クライアントにデータを送信するメソッド",
             "itemtype": "method",
             "name": "emit",
@@ -433,11 +454,15 @@
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 41,
+            "file": "lib/supports/socket-io.js",
+            "line": 47,
             "description": "接続済socketの配列を返すメソッド",
             "itemtype": "method",
             "name": "sockets",
@@ -448,8 +473,8 @@
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 51,
+            "file": "lib/supports/socket-io.js",
+            "line": 57,
             "description": "指定したUser IDと紐付けられたsocketを返すメソッド",
             "itemtype": "method",
             "name": "socket",
@@ -467,9 +492,21 @@
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 67,
-            "description": "client接続時に呼ばれるcallback",
+            "file": "lib/supports/socket-io.js",
+            "line": 76,
+            "description": "接続中の全socketを切断するメソッド",
+            "itemtype": "method",
+            "name": "disconnectAll",
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
+            "class": "SocketIO"
+        },
+        {
+            "file": "lib/supports/socket-io.js",
+            "line": 86,
+            "description": "client接続時に呼ばれるcallbackメソッド",
             "itemtype": "method",
             "name": "_onConnected",
             "access": "private",
@@ -481,12 +518,16 @@
                     "type": "Socket"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 79,
-            "description": "client切断時に呼ばれるcallback",
+            "file": "lib/supports/socket-io.js",
+            "line": 99,
+            "description": "client切断時に呼ばれるcallbackメソッド",
             "itemtype": "method",
             "name": "_onDisconnected",
             "access": "private",
@@ -498,12 +539,16 @@
                     "type": "Socket"
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
             "class": "SocketIO"
         },
         {
-            "file": "lib/socket-io.js",
-            "line": 90,
-            "description": "User IDとsocketの紐付けが行われた時に呼ばれるcallback",
+            "file": "lib/supports/socket-io.js",
+            "line": 113,
+            "description": "User IDとsocketの紐付けが行われた時に呼ばれるcallbackメソッド",
             "itemtype": "method",
             "name": "_onRegisterId",
             "access": "private",
@@ -527,27 +572,324 @@
                     ]
                 }
             ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
             "class": "SocketIO"
         },
         {
-            "file": "lib/token-generator.js",
-            "line": 10,
+            "file": "lib/supports/token-generator.js",
+            "line": 11,
             "description": "トークン(16bit数値)を生成するメソッド",
             "itemtype": "method",
             "name": "generate",
             "static": 1,
-            "params": [
-                {
-                    "name": "16bitの数値",
-                    "description": "",
-                    "type": "Integer"
-                }
-            ],
+            "return": {
+                "description": "16bitの数値",
+                "type": "Integer"
+            },
             "class": "TokenGenerator"
         },
         {
+            "file": "lib/auth-result-notificator.js",
+            "line": 15,
+            "description": "ユーザに認証結果を通知するメソッド",
+            "itemtype": "method",
+            "name": "notify",
+            "params": [
+                {
+                    "name": "socketIO",
+                    "description": "接続済みSocketIOオブジェクト",
+                    "type": "SocketIO"
+                },
+                {
+                    "name": "id",
+                    "description": "送付先のユーザID",
+                    "type": "String"
+                },
+                {
+                    "name": "permission",
+                    "description": "要求された権限",
+                    "type": "String"
+                },
+                {
+                    "name": "requiredUsers",
+                    "description": "認証に必要とされる権限保持者 (認証結果がfalseの場合、引数idで指定されたユーザに情報が通知されます)",
+                    "type": "[User]"
+                },
+                {
+                    "name": "nearPermissionHolders",
+                    "description": "自分の周りに居る権限保持者 (認証結果がtrueの場合、引数idで指定されたユーザに情報が通知されます)",
+                    "type": "[User]"
+                }
+            ],
+            "class": "AuthResultNotificator"
+        },
+        {
+            "file": "lib/distance-checker.js",
+            "line": 21,
+            "description": "近くにいる権限を持つユーザを探すメソッド",
+            "itemtype": "method",
+            "name": "findNearPermissionHolders",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "確認先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "permissionHolders",
+                    "description": "権限を持つユーザ",
+                    "type": "[User]"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "this",
+                "type": "Promise"
+            },
+            "class": "DistanceChecker"
+        },
+        {
+            "file": "lib/distance-checker.js",
+            "line": 85,
+            "description": "距離計測のリクエストを送るメソッド",
+            "itemtype": "method",
+            "name": "_emitDistanceRequest",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "this",
+                "type": "Promise"
+            },
+            "class": "DistanceChecker"
+        },
+        {
+            "file": "lib/notification-dispatcher.js",
+            "line": 13,
+            "description": "ユーザに通知を送るメソッド",
+            "itemtype": "method",
+            "name": "notify",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "通知先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "notification",
+                    "description": "通知内容",
+                    "type": "Notification"
+                }
+            ],
+            "class": "NotificationDispatcher"
+        },
+        {
+            "file": "lib/pairing-checker.js",
+            "line": 17,
+            "description": "ペアリングの状態を確認するメソッド",
+            "itemtype": "method",
+            "name": "check",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "確認先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "this",
+                "type": "Promise"
+            },
+            "class": "PairingChecker"
+        },
+        {
+            "file": "lib/pairing-checker.js",
+            "line": 38,
+            "description": "ペアリングの状態を確認するリクエストを送るメソッド",
+            "itemtype": "method",
+            "name": "_emit",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "this",
+                "type": "Promise"
+            },
+            "class": "PairingChecker"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 19,
+            "description": "クライアントへのリクエスト送信を行い、結果を受け取るメソッド\n\n一定時間以内に返答された結果全てを配列としてcallbackに渡す",
+            "itemtype": "method",
+            "name": "dispatch",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "送信先socket",
+                    "type": "Socket"
+                },
+                {
+                    "name": "request",
+                    "description": "リクエスト内容",
+                    "type": "String"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 46,
+            "description": "socketをRequestDispatcherに登録するメソッド",
+            "itemtype": "method",
+            "name": "register",
+            "static": 1,
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "登録するsocket",
+                    "type": "Socket"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 60,
+            "description": "HTTPリクエストをdispatchされたリクエストのレスポンスとして受け取るメソッド",
+            "itemtype": "method",
+            "name": "receiveHttpResponse",
+            "static": 1,
+            "params": [
+                {
+                    "name": "res",
+                    "description": "HTTPレスポンス",
+                    "type": "HTTPResponse"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/request-dispatcher.js",
+            "line": 72,
+            "description": "レスポンスを受け取った際に呼ばれるcallback",
+            "itemtype": "method",
+            "name": "_onReceiveResponse",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "res",
+                    "description": "レスポンス",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Void"
+            },
+            "class": "RequestDispatcher"
+        },
+        {
+            "file": "lib/watch-auth.js",
+            "line": 26,
+            "description": "認証を行うメソッド",
+            "itemtype": "method",
+            "name": "auth",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "ユーザID",
+                    "type": "String"
+                },
+                {
+                    "name": "permission",
+                    "description": "要求している権限",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "コールバック",
+                    "type": "Function"
+                },
+                {
+                    "name": "timeout",
+                    "description": "レスポンス待機時間",
+                    "type": "Integer"
+                }
+            ],
+            "class": "WatchAuth"
+        },
+        {
+            "file": "lib/watch-auth.js",
+            "line": 85,
+            "description": "SocketIOオブジェクトを返すメソッド (デバッグ用)",
+            "itemtype": "method",
+            "name": "socketIO",
+            "return": {
+                "description": "SocketIOオブジェクト",
+                "type": "SocketIO"
+            },
+            "class": "WatchAuth"
+        },
+        {
             "file": "models/permission.js",
-            "line": 16,
+            "line": 19,
             "description": "指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド",
             "itemtype": "method",
             "name": "hasEnoughPermissions",
@@ -570,23 +912,8 @@
             "class": "PermissionSchema"
         },
         {
-            "file": "models/permission.js",
-            "line": 31,
-            "description": "DB内の全てのPermissionを取得するメソッド (デバッグ用)",
-            "itemtype": "method",
-            "name": "findAll",
-            "params": [
-                {
-                    "name": "callback",
-                    "description": "返ってきたPermissionを受け取るコールバック",
-                    "type": "[Function]"
-                }
-            ],
-            "class": "PermissionSchema"
-        },
-        {
             "file": "models/role.js",
-            "line": 16,
+            "line": 18,
             "description": "指定したpermissionを満たす権限を持つRoleを検索するメソッド",
             "itemtype": "method",
             "name": "findByPermissions",
@@ -606,7 +933,7 @@
         },
         {
             "file": "models/user.js",
-            "line": 18,
+            "line": 25,
             "description": "指定したpermissionを満たす権限を持つUserを検索するメソッド",
             "itemtype": "method",
             "name": "findByPermissions",
@@ -626,7 +953,7 @@
         },
         {
             "file": "models/user.js",
-            "line": 34,
+            "line": 52,
             "description": "Userが、指定したpermissionを満たす権限を持つかを検査するメソッド",
             "itemtype": "method",
             "name": "hasEnoughPermissions",
@@ -646,7 +973,7 @@
         },
         {
             "file": "models/user.js",
-            "line": 50,
+            "line": 65,
             "description": "Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)",
             "itemtype": "method",
             "name": "hasEnoughPermission",
@@ -663,44 +990,56 @@
                 }
             ],
             "class": "UserSchema"
-        },
-        {
-            "file": "models/watch-auth.js",
-            "line": 24,
-            "description": "認証を行うメソッド",
-            "itemtype": "method",
-            "name": "auth",
-            "params": [
-                {
-                    "name": "id",
-                    "description": "ユーザID",
-                    "type": "String"
-                },
-                {
-                    "name": "permission",
-                    "description": "要求している権限",
-                    "type": "String"
-                },
-                {
-                    "name": "timeout",
-                    "description": "レスポンス待機時間",
-                    "type": "Integer"
-                }
-            ],
-            "class": "WatchAuth"
-        },
-        {
-            "file": "models/watch-auth.js",
-            "line": 80,
-            "description": "SocketIOオブジェクトを返すメソッド (デバッグ用)",
-            "itemtype": "method",
-            "name": "socketIO",
-            "return": {
-                "description": "SocketIOオブジェクト",
-                "type": "SocketIO"
-            },
-            "class": "WatchAuth"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:19"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:35"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:76"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:86"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:99"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/supports/socket-io.js:113"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/distance-checker.js:21"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/distance-checker.js:85"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/request-dispatcher.js:19"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/request-dispatcher.js:46"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/request-dispatcher.js:60"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/request-dispatcher.js:72"
+        }
+    ]
 }

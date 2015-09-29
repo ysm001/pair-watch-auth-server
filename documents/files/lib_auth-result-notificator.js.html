@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>models/permission.js</title>
+    <title>lib/auth-result-notificator.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -93,48 +93,103 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: models/permission.js</h1>
+<h1 class="file-heading">File: lib/auth-result-notificator.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 &#x27;use strict&#x27;;
 
-const mongoose = require(&#x27;mongoose&#x27;);
-const lodash = require(&#x27;lodash&#x27;);
-const promiseQuery = require(&#x27;../lib/supports/promise-query.js&#x27;);
-const Promise = require(&#x27;bluebird&#x27;)
+require(&#x27;date-utils&#x27;);
+const NotificationDispatcher = require(&#x27;./notification-dispatcher.js&#x27;);
+const User = require(&#x27;../models/user.js&#x27;);
 
 /**
- * Permission Model
+ * 認証結果を通知するクラス 
  *
- * @class PermissionSchema
+ * @class AuthResultNotificator
  * @constructor
  */
-const PermissionSchema = new mongoose.Schema({
-  name: {type: String, unique: true},
-  flag: {type: Number, unique: true}
-});
+const AuthResultNotificator = function() {};
 
 /**
- * 指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド
+ * ユーザに認証結果を通知するメソッド
  *
- * @method hasEnoughPermissions
- * @param {[Permission]} permissions permissionの配列
- * @param {[Permission]} requiredPermissions 要求されるpermissionの配列
- * @return {[Boolean]} permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse
+ * @method notify
+ * @param {SocketIO} socketIO 接続済みSocketIOオブジェクト
+ * @param {String} id 送付先のユーザID
+ * @param {String} permission 要求された権限
+ * @param {[User]} requiredUsers 認証に必要とされる権限保持者 (認証結果がfalseの場合、引数idで指定されたユーザに情報が通知されます)
+ * @param {[User]} nearPermissionHolders 自分の周りに居る権限保持者 (認証結果がtrueの場合、引数idで指定されたユーザに情報が通知されます)
  */
-PermissionSchema.static(&#x27;hasEnoughPermissions&#x27;, function(permissions, requiredPermissions) {
-  const permissionNames = permissions.map(function(permission) {return permission.name;});
-  const requiredPermissionNames = requiredPermissions.map(function(permission) {return permission.name;});
+AuthResultNotificator.notify = function(socketIO, id, permission, result, requiredUsers, nearPermissionHolders) {
+  const userSocket = socketIO.socket(id);
 
-  return lodash.difference(requiredPermissionNames, permissionNames).length === 0;
-});
+  if (!userSocket) {return;}
+  const targetUsers = _getTargetUsers(result, requiredUsers, nearPermissionHolders);
+  const targetSockets = _getTargetSockets(socketIO, targetUsers);
+  const type = _getNotificationType(result);
 
-PermissionSchema.static(&#x27;findByName&#x27;, function (name) {
-  return promiseQuery(this.findOne({name: name}));
-});
+  _notifToAuthorizers(type, targetSockets, id, permission);
+  _notifyAuthResult(socketIO, userSocket, result, targetUsers);
+};
 
-module.exports = mongoose.model(&#x27;Permission&#x27;, PermissionSchema);
+const _notifToAuthorizers = function(type, sockets, id, permission) {
+  const date = new Date();
+  const dateString = date.toFormat(&#x27;YYYY/MM/DD HH24:MI&#x27;);
+
+  User.findOne({deviceId: id}, function(err, user) {
+    const data = {
+      user: {id: user.deviceId, name: user.name},
+      date: dateString,
+      permission: permission
+    };
+
+    sockets.forEach(function(socket) {
+      if (!socket) {
+        return;
+      }
+
+      NotificationDispatcher.dispatch(socket, {type: type, data: data});
+    });
+  });
+};
+
+const _notifyAuthResult = function(socketIO, userSocket, result, targetUsers) {
+  const type = result ? &#x27;auth-successed&#x27; : &#x27;auth-failed&#x27;;
+  const data = _formatUsers(socketIO, targetUsers);
+
+  NotificationDispatcher.dispatch(userSocket, {
+    type: type,
+    data: data
+  });
+};
+
+const _formatUsers = function(socketIO, users) {
+  return users.map(function(user) {return _formatUser(socketIO, user);});
+};
+
+const _formatUser = function(socketIO, user) {
+  return {
+    name: user.name,
+    id: user.deviceId,
+    iconUrl: null,
+    connected: socketIO.socket(user.deviceId) !== null
+  };
+};
+
+const _getNotificationType = function(result) {
+  return result ? &#x27;permission-used&#x27; : &#x27;permission-violation&#x27;;
+};
+
+const _getTargetSockets = function(socketIO, targetUsers) {
+  return targetUsers.map(function(user) {return socketIO.socket(user.deviceId);});
+};
+
+const _getTargetUsers = function(result, requiredUsers, nearPermissionHolders) {
+  return (result ? nearPermissionHolders : requiredUsers) || [];
+};
+
+module.exports = AuthResultNotificator;
 
     </pre>
 </div>

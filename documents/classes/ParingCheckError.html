@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>models/watch-auth.js</title>
+    <title>ParingCheckError</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -83,103 +93,76 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: models/watch-auth.js</h1>
+<h1>ParingCheckError Class</h1>
+<div class="box meta">
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-var SocketIO = require(&#x27;../lib/socket-io.js&#x27;);
-var RequestDispatcher = require(&#x27;../lib/request-dispatcher.js&#x27;);
-var Puid = require(&#x27;puid&#x27;);
-var User = require(&#x27;./user.js&#x27;);
-var Permission = require(&#x27;./permission.js&#x27;);
-var async = require(&#x27;async&#x27;)
-var PairingChecker = require(&#x27;../lib/pairing-checker.js&#x27;)
-var DistanceChecker = require(&#x27;../lib/distance-checker.js&#x27;)
 
-module.exports = (function() {
-  var _socketIO = null;
-  var _requestDispatcher = null;
+        <div class="foundat">
+            Defined in: <a href="../files/lib_errors_pairing-check-error.js.html#l5"><code>lib&#x2F;errors&#x2F;pairing-check-error.js:5</code></a>
+        </div>
 
-  /**
-   * Apple Watchを使った認証を扱うクラス
-   *
-   * @class WatchAuth
-   * @constructor
-   */
-  var WatchAuth = function(io) {
-    _socketIO = new SocketIO(io);
-  }
 
-  /**
-   * 認証を行うメソッド
-   *
-   * @method auth
-   * @param {String} id ユーザID
-   * @param {String} permission 要求している権限
-   * @param {Integer} timeout レスポンス待機時間
-   */
-  WatchAuth.prototype.auth = function(id, permission, callback, timeout) {
-    var sockets = _socketIO.sockets();
-    var socket = _socketIO.socket(id);
+</div>
 
-    var tasks = [
-      function(next) {
-        _checkPermission.call(this, id, permission, next);
-      },
-      function(result, requiredUsers, next) {
-        next(!socket ? id + &quot; is not connected.&quot; : null, result, requiredUsers);
-      },
-      function(result, requiredUsers,next) {
-        _checkAccessibility(socket, result, requiredUsers, next, timeout);
-      }
-    ];
 
-    async.waterfall(tasks, function(err, result, requiredUsers) {
-      callback(err, result &amp;&amp; !err, requiredUsers);
-    });
-  }
+<div class="box intro">
+    <p>ペアリングの確認に失敗したことを表すエラー</p>
 
-  var _checkAccessibility = function(socket, hasPermission, requiredUsers, callback, timeout) {
-    var tasks = [
-      function(next) {
-        PairingChecker.check(socket, next, timeout);
-      },
-      function(result, next) {
-        next(!result ? &quot;pairing check is failed.&quot; : null, result);
-      },
-      function(result, next) {
-        if (hasPermission) next(null, true);
-        else DistanceChecker.checkPermissionHoldersAreNear(socket, requiredUsers, next, timeout);
-      }
-    ];
+</div>
 
-    async.waterfall(tasks , function(err, result) {
-      callback(err, result, requiredUsers);
-    });
-  }
+    <div class="constructor">
+        <h2>Constructor</h2>
+<div id="method_ParingCheckError" class="method item">
+    <h3 class="name"><code>ParingCheckError</code></h3>
 
-  var _checkPermission = function(id, permission, callback) {
-    Permission.findOne({name: permission}, function(err, permission) {
-      User.findOne({deviceId: id}, function(err, user) {
-        if (err || !user) callback(err || id + &#x27; is not valid user.&#x27;, false);
-        else user.hasEnoughPermission(permission, callback);
-      });
-    });
-  }
-  /**
-   * SocketIOオブジェクトを返すメソッド (デバッグ用)
-   *
-   * @method socketIO
-   * @return {SocketIO} SocketIOオブジェクト
-   */
-  WatchAuth.prototype.socketIO = function() {
-    return _socketIO;
-  }
+        <span class="paren">()</span>
 
-  return WatchAuth;
-})();
 
-    </pre>
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/lib_errors_pairing-check-error.js.html#l5"><code>lib&#x2F;errors&#x2F;pairing-check-error.js:5</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+
+</div>
+    </div>
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
 </div>
                     </div>
                 </div>

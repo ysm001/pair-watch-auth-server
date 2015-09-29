@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>models/permission.js</title>
+    <title>lib/notification-dispatcher.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -93,48 +93,35 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: models/permission.js</h1>
+<h1 class="file-heading">File: lib/notification-dispatcher.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 &#x27;use strict&#x27;;
 
-const mongoose = require(&#x27;mongoose&#x27;);
-const lodash = require(&#x27;lodash&#x27;);
-const promiseQuery = require(&#x27;../lib/supports/promise-query.js&#x27;);
-const Promise = require(&#x27;bluebird&#x27;)
+const _logger = require(&#x27;./supports/logger.js&#x27;);
 
 /**
- * Permission Model
+ * 通知の送信を行うクラス 
  *
- * @class PermissionSchema
+ * @class NotificationDispatcher
  * @constructor
  */
-const PermissionSchema = new mongoose.Schema({
-  name: {type: String, unique: true},
-  flag: {type: Number, unique: true}
-});
+const NotificationDispatcher = function() {};
 
 /**
- * 指定したpermissionが、要求されるpermissionを持っているかを検査するメソッド
+ * ユーザに通知を送るメソッド
  *
- * @method hasEnoughPermissions
- * @param {[Permission]} permissions permissionの配列
- * @param {[Permission]} requiredPermissions 要求されるpermissionの配列
- * @return {[Boolean]} permissionsがrequiredPermissionsを満たす場合はtrue、そうでなければfalse
+ * @method notify
+ * @param {Socket} socket 通知先socket
+ * @param {Notification} notification 通知内容
  */
-PermissionSchema.static(&#x27;hasEnoughPermissions&#x27;, function(permissions, requiredPermissions) {
-  const permissionNames = permissions.map(function(permission) {return permission.name;});
-  const requiredPermissionNames = requiredPermissions.map(function(permission) {return permission.name;});
+NotificationDispatcher.dispatch = function(socket, notification) {
+  socket.emit(&#x27;notification&#x27;, {notification: notification});
+  _logger.debug(&#x27;notify [&#x27; + notification.type + &#x27;]&#x27; + &#x27;-&gt;&#x27; + socket.handshake.user.id);
+};
 
-  return lodash.difference(requiredPermissionNames, permissionNames).length === 0;
-});
-
-PermissionSchema.static(&#x27;findByName&#x27;, function (name) {
-  return promiseQuery(this.findOne({name: name}));
-});
-
-module.exports = mongoose.model(&#x27;Permission&#x27;, PermissionSchema);
+module.exports = NotificationDispatcher;
 
     </pre>
 </div>

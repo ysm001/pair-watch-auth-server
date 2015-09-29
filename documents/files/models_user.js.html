@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -87,68 +97,89 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-module.exports = (function() {
-  var mongoose = require(&#x27;mongoose&#x27;);
-  var Role = require(&#x27;./role.js&#x27;);
+&#x27;use strict&#x27;;
 
-  /**
-   * User Model
-   *
-   * @class UserSchema
-   * @constructor
-   */
-  var UserSchema = new mongoose.Schema({
-    name: {type: String},
-    deviceId: {type: String, unique: true},
-    role: {type: mongoose.Schema.ObjectId, ref: &#x27;Role&#x27;}
-  });
-  
+const mongoose = require(&#x27;mongoose&#x27;);
+const Role = require(&#x27;./role.js&#x27;);
+const promiseQuery = require(&#x27;../lib/supports/promise-query.js&#x27;);
+const Promise = require(&#x27;bluebird&#x27;);
+const RecordNotFoundError = require(&#x27;../lib/errors/record-not-found-error.js&#x27;);
 
-  /**
-   * 指定したpermissionを満たす権限を持つUserを検索するメソッド
-   *
-   * @method findByPermissions
-   * @param {[Permission]} permissions permissionの配列
-   * @param {Function} callback callback
-   */
-  UserSchema.static(&#x27;findByPermissions&#x27;, function(permissions, callback) {
-    var self = this;
+/**
+ * User Model
+ *
+ * @class UserSchema
+ * @constructor
+ */
+const UserSchema = new mongoose.Schema({
+  name: {type: String},
+  deviceId: {type: String, unique: true},
+  role: {type: mongoose.Schema.ObjectId, ref: &#x27;Role&#x27;}
+});
 
-    Role.findByPermissions(permissions, function(err, roles) {
-      var roleIds = roles.map(function(role) {return role._id});
-      self.find({role: {$in: roleIds}}, callback);
-    });
-  });
+UserSchema.static(&#x27;findByPermission&#x27;, function(permission) {
+  return this.model(&#x27;User&#x27;).findByPermissions([permission]);
+});
 
-  /**
-   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
-   *
-   * @method hasEnoughPermissions
-   * @param {[Permission]} permissions permissionの配列
-   * @param {Function} callback callback
-   */
-  UserSchema.method(&#x27;hasEnoughPermissions&#x27;, function(permissions, callback) {
-    var self = this;
+/**
+ * 指定したpermissionを満たす権限を持つUserを検索するメソッド
+ *
+ * @method findByPermissions
+ * @param {[Permission]} permissions permissionの配列
+ * @param {Function} callback callback
+ */
+UserSchema.static(&#x27;findByPermissions&#x27;, function(permissions) {
+  return Role.findByPermissions(permissions).then(function(roles) {
+    const roleIds = roles.map(function(role) {return role.id;});
+    return promiseQuery(this.find({role: {$in: roleIds}}));
+  }.bind(this));
+});
 
-    this.model(&#x27;User&#x27;).findByPermissions(permissions, function(err, users) {
-      var result = users.some(function(user) {return user._id.equals(self._id)});
-      callback(err, result, users);
-    });
-  });
+UserSchema.static(&#x27;findByDeviceId&#x27;, function(deviceId) {
+  return promiseQuery(this.findOne({deviceId: deviceId}));
+});
 
-  /**
-   * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)
-   *
-   * @method hasEnoughPermission
-   * @param {Permission} permissions permission
-   * @param {Function} callback callback
-   */
-  UserSchema.method(&#x27;hasEnoughPermission&#x27;, function(permission, callback) {
-    this.hasEnoughPermissions([permission], callback);
-  });
+UserSchema.static(&#x27;findByDeviceIds&#x27;, function(deviceIds) {
+  const condition = deviceIds.map(function(id) {return {deviceId: id};});
+  return promiseQuery(this.find({$or: condition}));
+});
 
-  return mongoose.model(&#x27;User&#x27;, UserSchema);
-}) ();
+UserSchema.static(&#x27;findByName&#x27;, function(name) {
+  return promiseQuery(this.findOne({name: name}));
+})
+
+/**
+ * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド
+ *
+ * @method hasEnoughPermissions
+ * @param {[Permission]} permissions permissionの配列
+ * @param {Function} callback callback
+ */
+UserSchema.method(&#x27;hasEnoughPermissions&#x27;, function(permissions) {
+  return this.model(&#x27;User&#x27;).findByPermissions(permissions).then(function(users) {
+    return users.some(function(user) {return user.id === this.id;}.bind(this));
+  }.bind(this));
+});
+
+/**
+ * Userが、指定したpermissionを満たす権限を持つかを検査するメソッド(単数版)
+ *
+ * @method hasEnoughPermission
+ * @param {Permission} permissions permission
+ * @param {Function} callback callback
+ */
+UserSchema.method(&#x27;hasEnoughPermission&#x27;, function(permission, callback) {
+  return this.hasEnoughPermissions([permission], callback);
+});
+
+UserSchema.method(&#x27;toSimpleFormat&#x27;, function() {
+  return {
+    name: this.name,
+    deviceId: this.deviceId
+  };
+});
+
+module.exports = mongoose.model(&#x27;User&#x27;, UserSchema);
 
     </pre>
 </div>

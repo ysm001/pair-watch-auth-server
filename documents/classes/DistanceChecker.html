@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -88,7 +98,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/lib_distance-checker.js.html#l6"><code>lib&#x2F;distance-checker.js:6</code></a>
+            Defined in: <a href="../files/lib_distance-checker.js.html#l11"><code>lib&#x2F;distance-checker.js:11</code></a>
         </div>
 
 
@@ -118,7 +128,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_distance-checker.js.html#l6"><code>lib&#x2F;distance-checker.js:6</code></a>
+        <a href="../files/lib_distance-checker.js.html#l11"><code>lib&#x2F;distance-checker.js:11</code></a>
         </p>
 
 
@@ -155,13 +165,8 @@
 
                             </li>
                             <li class="index-item method private">
-                                <a href="#method__findNearPermissionHolders">_findNearPermissionHolders</a>
+                                <a href="#method_findNearPermissionHolders">findNearPermissionHolders</a>
 
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_checkPermissionHoldersAreNear">checkPermissionHoldersAreNear</a>
-
-                                    <span class="flag static">static</span>
                             </li>
                     </ul>
                 </div>
@@ -182,14 +187,14 @@
                         <code>socket</code>
                 </li>
                 <li class="arg">
-                        <code>callback</code>
-                </li>
-                <li class="arg">
                         <code>timeout</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
 
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
 
 
         <span class="flag private">private</span>
@@ -201,7 +206,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_distance-checker.js.html#l63"><code>lib&#x2F;distance-checker.js:63</code></a>
+        <a href="../files/lib_distance-checker.js.html#l85"><code>lib&#x2F;distance-checker.js:85</code></a>
         </p>
 
 
@@ -229,17 +234,6 @@
 
                 </li>
                 <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>結果を受け取るcallback</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
                         <code class="param-name">timeout</code>
                         <span class="type">Integer</span>
 
@@ -253,11 +247,20 @@
             </ul>
         </div>
 
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Promise</span>:
+                    <p>this</p>
+
+            </div>
+        </div>
 
 
 </div>
-<div id="method__findNearPermissionHolders" class="method item private">
-    <h3 class="name"><code>_findNearPermissionHolders</code></h3>
+<div id="method_findNearPermissionHolders" class="method item private">
+    <h3 class="name"><code>findNearPermissionHolders</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
@@ -268,14 +271,14 @@
                         <code>permissionHolders</code>
                 </li>
                 <li class="arg">
-                        <code>callback</code>
-                </li>
-                <li class="arg">
                         <code>timeout</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
 
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
 
 
         <span class="flag private">private</span>
@@ -287,7 +290,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/lib_distance-checker.js.html#l32"><code>lib&#x2F;distance-checker.js:32</code></a>
+        <a href="../files/lib_distance-checker.js.html#l21"><code>lib&#x2F;distance-checker.js:21</code></a>
         </p>
 
 
@@ -326,17 +329,6 @@
 
                 </li>
                 <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>結果を受け取るcallback</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
                         <code class="param-name">timeout</code>
                         <span class="type">Integer</span>
 
@@ -350,103 +342,15 @@
             </ul>
         </div>
 
+        <div class="returns">
+            <h4>Returns:</h4>
 
+            <div class="returns-description">
+                        <span class="type">Promise</span>:
+                    <p>this</p>
 
-</div>
-<div id="method_checkPermissionHoldersAreNear" class="method item">
-    <h3 class="name"><code>checkPermissionHoldersAreNear</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>socket</code>
-                </li>
-                <li class="arg">
-                        <code>permissionHolders</code>
-                </li>
-                <li class="arg">
-                        <code>callback</code>
-                </li>
-                <li class="arg">
-                        <code>timeout</code>
-                </li>
-            </ul><span class="paren">)</span>
+            </div>
         </div>
-
-
-
-
-
-        <span class="flag static">static</span>
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/lib_distance-checker.js.html#l16"><code>lib&#x2F;distance-checker.js:16</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>指定した権限を持つユーザが近くにいるかを確認するメソッド</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">socket</code>
-                        <span class="type">Socket</span>
-
-
-                    <div class="param-description">
-                        <p>確認先socket</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">permissionHolders</code>
-                        <span class="type">User</span>
-
-
-                    <div class="param-description">
-                        <p>権限を持つユーザ</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-
-
-                    <div class="param-description">
-                        <p>結果を受け取るcallback</p>
-
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">timeout</code>
-                        <span class="type">Integer</span>
-
-
-                    <div class="param-description">
-                        <p>レスポンス待機時間</p>
-
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
 
 
 </div>

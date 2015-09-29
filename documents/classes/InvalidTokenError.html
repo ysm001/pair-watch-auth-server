@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib/socket-io.js</title>
+    <title>InvalidTokenError</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -38,16 +38,26 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AuthResultNotificator.html">AuthResultNotificator</a></li>
                                 <li><a href="../classes/DistanceChecker.html">DistanceChecker</a></li>
+                                <li><a href="../classes/InvalidTokenError.html">InvalidTokenError</a></li>
+                                <li><a href="../classes/NoResponseError.html">NoResponseError</a></li>
+                                <li><a href="../classes/NotificationDispatcher.html">NotificationDispatcher</a></li>
                                 <li><a href="../classes/PairingChecker.html">PairingChecker</a></li>
+                                <li><a href="../classes/ParingCheckError.html">ParingCheckError</a></li>
+                                <li><a href="../classes/PermissionError.html">PermissionError</a></li>
+                                <li><a href="../classes/PermissionHoldersNotFoundError.html">PermissionHoldersNotFoundError</a></li>
                                 <li><a href="../classes/PermissionSchema.html">PermissionSchema</a></li>
+                                <li><a href="../classes/RecordNotFoundError.html">RecordNotFoundError</a></li>
                                 <li><a href="../classes/RequestDispatcher.html">RequestDispatcher</a></li>
                                 <li><a href="../classes/RoleSchema.html">RoleSchema</a></li>
                                 <li><a href="../classes/SocketIO.html">SocketIO</a></li>
+                                <li><a href="../classes/SocketNotConnectedError.html">SocketNotConnectedError</a></li>
                                 <li><a href="../classes/TokenGenerator.html">TokenGenerator</a></li>
                                 <li><a href="../classes/UserSchema.html">UserSchema</a></li>
                                 <li><a href="../classes/WatchAuth.html">WatchAuth</a></li>
                             </ul>
+                
                 
                             <ul id="api-modules" class="apis modules">
                             </ul>
@@ -83,117 +93,76 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: lib/socket-io.js</h1>
+<h1>InvalidTokenError Class</h1>
+<div class="box meta">
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-module.exports = (function() {
-  var _io = null;
 
-  /**
-   * socket.ioの簡易wrapperクラス
-   *
-   * @class SocketIO
-   * @constructor
-   */
-  var SocketIO = function(io) {
-    _io = io;
-    this.startConnection();
-  }
+        <div class="foundat">
+            Defined in: <a href="../files/lib_errors_invalid-token-error.js.html#l5"><code>lib&#x2F;errors&#x2F;invalid-token-error.js:5</code></a>
+        </div>
 
-  /**
-   * 接続の受け入れを開始するメソッド
-   *
-   * @method startConnection
-   * @param {Function} callback 接続受け入れ開始後に呼ばれるcallback
-   */
-  SocketIO.prototype.startConnection = function(callback) {
-    _io.on(&#x27;connection&#x27;, function(socket) {
-      _onConnected(socket);
-      socket.on(&#x27;disconnect&#x27;, _onDisconnected.bind(this, socket));
-      socket.on(&#x27;register-id&#x27;, _onRegisterId.bind(this, socket));
-      if (callback) callback(socket);
-    }.bind(this));
-  }
 
-  /**
-   * クライアントにデータを送信するメソッド
-   *
-   * @method emit
-   * @param {String} event イベント名
-   * @param {String} data 送信するデータ
-   */
-  SocketIO.prototype.emit = function(event, data) {
-    _io.emit(event, data);
-  }
+</div>
 
-  /**
-   * 接続済socketの配列を返すメソッド
-   *
-   * @method sockets
-   * @return {[Socket]} sockets 接続済socketの配列
-   */
-  SocketIO.prototype.sockets = function() {
-    return _io.sockets.sockets;
-  }
 
-  /**
-   * 指定したUser IDと紐付けられたsocketを返すメソッド
-   *
-   * @method socket
-   * @param {String} uid User ID
-   * @return {Socket} socket 指定したUser IDと紐付けられたsocket
-   */
-  SocketIO.prototype.socket = function(uid) {
-    var sockets = this.sockets();
-    for (var i = 0, n = sockets.length; i &lt; n; ++i) {
-      if (sockets[i].handshake.user.id == uid) return sockets[i];
-    }
+<div class="box intro">
+    <p>不正なトークンを受信したことを表すエラー</p>
 
-    return null;
-  }
+</div>
 
-  /**
-   * client接続時に呼ばれるcallback
-   *
-   * @method _onConnected
-   * @private
-   * @param {Socket} socket 新たに接続したsocket
-   */
-  var _onConnected = function(socket) {
-    socket.handshake.user = {};
-    console.log(&quot;client connected!!&quot;);
-  }
+    <div class="constructor">
+        <h2>Constructor</h2>
+<div id="method_InvalidTokenError" class="method item">
+    <h3 class="name"><code>InvalidTokenError</code></h3>
 
-  /**
-   * client切断時に呼ばれるcallback
-   *
-   * @method _onDisconnected
-   * @private
-   * @param {Socket} socket 切断されたsocket
-   */
-  var _onDisconnected = function(socket) {
-    console.log(&quot;client disconnected!!&quot;)
-  }
+        <span class="paren">()</span>
 
-  /**
-   * User IDとsocketの紐付けが行われた時に呼ばれるcallback
-   *
-   * @method _onRegisterId
-   * @private
-   * @param {Socket} socket 紐付けを行うsocket
-   * @param {Object} data User IDを含むObject
-   * @param {String} data.id User ID
-   */
-  var _onRegisterId = function(socket, data) {
-    socket.handshake.user.id = data.id;
-    console.log(data.id + &quot; is registered&quot;);
-  }
 
-  return SocketIO;
-})();
 
-    </pre>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/lib_errors_invalid-token-error.js.html#l5"><code>lib&#x2F;errors&#x2F;invalid-token-error.js:5</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+
+</div>
+    </div>
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
 </div>
                     </div>
                 </div>
