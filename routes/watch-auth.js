@@ -1,5 +1,5 @@
 var express = require('express');
-var WatchAuth = require('../models/watch-auth.js');
+var WatchAuth = require('../lib/watch-auth.js');
 var AuthResultNotificator = require('../lib/auth-result-notificator.js')
 var PermissionError = require('../lib/errors/permission-error.js');
 

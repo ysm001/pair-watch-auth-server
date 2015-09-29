@@ -1,6 +1,6 @@
 module.exports = (function() {
   var Permission = require('../../models/permission.js');
-  var promiseQuery = require('../../lib/promise-query.js');
+  var promiseQuery = require('../../lib/supports/promise-query.js');
 
   var PermissionHelper = function() {};
   PermissionHelper.permissions = {};

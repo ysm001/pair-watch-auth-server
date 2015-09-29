@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Permission = require('./permission.js');
-const promiseQuery = require('../lib/promise-query.js');
+const promiseQuery = require('../lib/supports/promise-query.js');
 
 /**
  * Role Model

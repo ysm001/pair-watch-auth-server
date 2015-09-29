@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Role = require('./role.js');
-const promiseQuery = require('../lib/promise-query.js');
+const promiseQuery = require('../lib/supports/promise-query.js');
 const Promise = require('bluebird');
 const RecordNotFoundError = require('../lib/errors/record-not-found-error.js');
 

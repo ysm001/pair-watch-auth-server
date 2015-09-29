@@ -1,6 +1,6 @@
 module.exports = (function() {
   var User = require('../../models/user.js');
-  var promiseQuery = require('../../lib/promise-query.js');
+  var promiseQuery = require('../../lib/supports/promise-query.js');
 
   var UserHelper = function() {};
   UserHelper.users = {};
