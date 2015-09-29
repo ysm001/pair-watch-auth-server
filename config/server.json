@@ -2,6 +2,7 @@
   "development": {
     "port": "3000"
   },
-  "production": {},
-  "test": {}
+  "test": {
+    "port": "3001"
+  }
 }

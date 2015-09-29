@@ -1,5 +1,7 @@
 var io = require('socket.io-client');
-var config = require('../../config/server.json').development;
+var isTestMode = !!process.argv[4];
+var configJSON = require('../../config/server.json');
+var config = isTestMode ? configJSON.test : configJSON.development;
 var url = "http://localhost:" + config.port;
 var uid = process.argv[2];
 var disableBeacon = !!process.argv[3];

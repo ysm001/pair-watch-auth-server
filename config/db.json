@@ -4,6 +4,9 @@
     "port": "27017",
     "database": "watch_auth_db"
   },
-  "production": {},
-  "test": {}
+  "test": {
+    "host": "localhost",
+    "port": "27017",
+    "database": "watch_auth_db_test"
+  }
 }
